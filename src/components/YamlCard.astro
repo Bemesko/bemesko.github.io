@@ -14,7 +14,9 @@ interface Props {
 const { filename, root, entries } = Astro.props;
 ---
 
-<pre class="yaml" data-file={filename}><span class="k">{root}</span>:
+<div class="yaml-card">
+  <span class="file">{filename}</span>
+  <pre class="yaml"><span class="k">{root}</span>:
 {entries.map((e) => (
   <>{'  '}<span class="k">{e.key}</span>: {Array.isArray(e.value) ? (
     <>[{e.value.map((v, i) => <>{i > 0 && ', '}<span class="v">{v}</span></>)}]</>
@@ -22,28 +24,34 @@ const { filename, root, entries } = Astro.props;
     <span class="v">{String(e.value)}</span>
   )}{e.comment && <span class="c">  # {e.comment}</span>}{'\n'}</>
 ))}</pre>
+</div>
 
 <style>
-  .yaml {
+  /* the label sits on the border, so overflow scrolling lives on the inner <pre> */
+  .yaml-card {
     position: relative;
+    margin-top: 0.75em;
     background: var(--paper);
     border: var(--hairline);
+  }
+  .file {
+    position: absolute;
+    top: 0;
+    left: 14px;
+    transform: translateY(-50%);
+    background: var(--paper);
+    padding: 0 8px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    line-height: 1.4;
+    color: var(--muted);
+  }
+  .yaml {
     padding: 22px 22px 18px;
     font-family: var(--font-mono);
     font-size: 0.8rem;
     line-height: 1.9;
     overflow-x: auto;
-  }
-  .yaml::before {
-    content: attr(data-file);
-    position: absolute;
-    top: -0.75em;
-    left: 14px;
-    background: var(--paper);
-    padding: 0 8px;
-    font-size: 0.68rem;
-    color: var(--muted);
-    line-height: 1.5;
   }
   .k {
     color: var(--ink);

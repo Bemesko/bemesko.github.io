@@ -1,7 +1,5 @@
 /*
  * Active type pairing for the whole site.
- * To switch pairings, change the import below and the class in
- * src/layouts/BaseLayout.astro (TYPE_PAIRING). Options: editorial, chart, plex.
- * Compare them at /type-specimen.
+ * Type pairing "Technical chart": Space Grotesk + Source Serif 4 + JetBrains Mono.
  */
-@import './fonts/editorial.css';
+@import './fonts/chart.css';

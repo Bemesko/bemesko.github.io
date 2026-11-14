@@ -1,20 +1,42 @@
 ---
-title: Security incident response
-summary: Analysis, evidence collection and a clear report, from first alert to lessons learned.
-year: 2025
-role: Incident lead
-stack: [Azure, Microsoft Defender, KQL]
+title: Security incident response at scale
+summary: Front-line response to a compromised partner account, ending with one clear report for each affected customer in about two weeks.
+year: 2026
+company: SOU
+role: Front-line responder
+team: 8 people
+stack: [Azure, Azure Lighthouse, Azure logs, agentic development]
 area: security
-order: 20
+order: 50
 draft: true
 star:
-  situation: 'TODO: what was detected and how.'
-  task: 'TODO: contain, investigate and report.'
-  action: 'TODO: steps taken, tooling, evidence handling.'
-  result: 'TODO: outcome and what changed afterwards.'
+  situation: A compromised account with delegated access reached many customer tenants and ran commands on some of their VMs.
+  task: Contain the incident and give every affected customer a clear view of what happened in their environment.
+  action: Analysed logs, prioritized key rotation and blocking public access, and used agentic development to consolidate logs into per-customer reports.
+  result: 200 reports, one per affected customer, with executive and technical versions. Every customer contacted and supported in about two weeks.
 ---
 
 <p class="todo">
-  TODO: write this case study, keeping out anything confidential. Suggested outline: detection,
-  containment, investigation, report, follow-up.
+  DRAFT, not published. This was an internal incident at your employer: decide whether it belongs on
+  a public site and how much detail is safe. Numbers from the brag doc (226 tenants, 244
+  subscriptions, 77 targeted customers, 146 of 495 VMs) are deliberately left out here.
 </p>
+
+## What happened
+
+An account with delegated access to customer environments was compromised. The attacker used that access to run commands on virtual machines in several customer tenants. Containment took four days, and the assessment of every environment was complete ten days after the compromise.
+
+## My part
+
+I was on the front line of the response, not leading the technical war room:
+
+- Analysed logs and identified exposed resources and credentials.
+- Prioritized key rotation and blocking public access, some of it executed by the customers' own teams.
+- Talked to customers directly.
+- Used agentic development to consolidate logs from several sources into **200 reports, one per affected customer**, each with an executive and a technical version.
+
+## Results
+
+All affected customers were prioritized, contacted and supported in about two weeks. In one case, the report was in the customer's hands 4 hours 39 minutes after the meeting where I committed to it.
+
+<p class="todo">TODO: lessons learned.</p>

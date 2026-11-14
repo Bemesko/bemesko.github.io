@@ -1,0 +1,32 @@
+---
+title: Kubernetes-native observability with OpenTelemetry
+summary: Self-service metrics, logs and traces across AKS, EKS and on-prem clusters for a platform that runs steel plants, plus a move to GitOps.
+year: 2025
+company: Vetta (SMS Group)
+role: DevOps engineer
+stack: [OpenTelemetry, Grafana, Graylog, Jaeger, Kubernetes, Helm, ArgoCD]
+area: observability · kubernetes
+order: 30
+star:
+  situation: 'TODO: what observability looked like before (tools, gaps, who could see what).'
+  task: Give teams self-service access to metrics, logs and traces across clouds and on-prem.
+  action: Built an OpenTelemetry auto-instrumentation platform with Grafana, Graylog and Jaeger, and moved Helm deploys to GitOps with ArgoCD.
+  result: 'TODO: outcome (adoption, MTTR, incidents found…).'
+---
+
+At Vetta, part of SMS Group, the Viridis platform runs steel plant operations for major steelmakers. It runs on Kubernetes in Azure, AWS and on-prem.
+
+## What I built
+
+- **Auto-instrumentation with OpenTelemetry**, so services emit traces and metrics without code changes.
+- **Self-service backends**: Grafana for metrics, Graylog for logs and Jaeger for traces, available to teams across AKS, EKS and on-prem clusters.
+- **GitOps with ArgoCD**, replacing direct Helm deploys. The approach was taken up by SMS Group's cloud team in Germany.
+
+In parallel, Azure and Azure DevOps optimizations cut cloud costs by **15% in my first three months** and reduced pipeline support tickets.
+
+I later turned this work into a talk, _Observability on Kubernetes with OpenTelemetry_, at a Codecon Meetup in 2025.
+
+<p class="todo">
+  TODO: add the starting point and one concrete result (a problem found through traces, adoption by
+  teams, etc.).
+</p>

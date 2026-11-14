@@ -42,6 +42,12 @@ const { Content } = await render(project);
         <strong>{data.area}</strong>
         <br />
         Year · {data.year}
+        {data.company && (
+          <>
+            <br />
+            At · {data.company}
+          </>
+        )}
         <br />
         Role · {data.role}
         {data.team && (

@@ -10,6 +10,8 @@ const projects = defineCollection({
     year: z.number().int(),
     role: z.string(),
     team: z.string().optional(),
+    /** company where the work happened, shown in the project metadata */
+    company: z.string().optional(),
     stack: z.array(z.string()).default([]),
     /** short label shown in project lists, e.g. "azure · networking" */
     area: z.string(),

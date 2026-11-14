@@ -2,23 +2,69 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import DepthZone from '../components/DepthZone.astro';
 import YamlCard from '../components/YamlCard.astro';
-import { LINKS, SITE } from '../site';
+import { CONTACT, LINKS, SITE } from '../site';
 
-const contact = [
-  { label: 'GitHub', href: LINKS.github },
-  { label: 'LinkedIn', href: LINKS.linkedin },
-  { label: 'Email', href: LINKS.email },
-].filter((c) => c.href);
-
-// TODO: replace with your real timeline
 const timeline = [
-  { when: 'TODO', what: 'Current role: platform, DevOps and AI architecture' },
-  { when: 'TODO', what: 'Previous role' },
-  { when: 'TODO', what: 'Where it started' },
+  {
+    when: '2025 – now',
+    where: 'SOU',
+    what: 'DevOps Engineer at a top-5 Microsoft solutions partner in LATAM. Terraform golden paths, FinOps, and the infrastructure behind AI agents in production.',
+  },
+  {
+    when: '2024 – 2025',
+    where: 'Vetta (SMS Group)',
+    what: 'DevOps Engineer on Viridis, the platform that runs steel plants. OpenTelemetry observability across AKS, EKS and on-prem, and GitOps with ArgoCD.',
+  },
+  {
+    when: '2023 – 2024',
+    where: 'IP5 Tecnologia',
+    what: 'DevOps Engineer at an IT consultancy serving around 100 Brazilian businesses. Azure, CI/CD and containers for .NET, Angular, Python and Flutter apps.',
+  },
+  {
+    when: '2021 – 2023',
+    where: 'Philips (Tasy)',
+    what: 'DevOps Engineer on the electronic medical record used by hospitals worldwide. Split one shared dev environment for ~500 developers into per-team environments.',
+  },
+];
+
+const education = [
+  {
+    when: '2021 – 2024',
+    what: 'B.Tech. in Systems Development & Analysis, Estácio de Sá University',
+  },
+  {
+    when: '2018 – 2021',
+    what: 'Technical degree in Informatics, Federal Institute of Santa Catarina (IFSC)',
+  },
+];
+
+const certs = [
+  'DevOps Engineer Expert (AZ-400)',
+  'Azure Administrator Associate (AZ-104)',
+  'Azure Developer Associate (AZ-204)',
+  'Azure AI Engineer Associate (AI-102)',
+  'Fabric Analytics Engineer Associate (DP-600)',
+  'Fabric Data Engineer Associate (DP-700)',
+  'GitHub Administration',
+  'Azure Fundamentals (AZ-900)',
+];
+
+const talks = [
+  {
+    when: '2026',
+    what: 'Agentic DevOps',
+    where: 'Webinar co-hosted with Microsoft',
+    note: 'Live demo of a multi-agent squad shipping through GitHub Actions, Bicep and Azure Container Apps.',
+  },
+  {
+    when: '2025',
+    what: 'Observability on Kubernetes with OpenTelemetry',
+    where: 'Codecon Meetup',
+  },
 ];
 ---
 
-<BaseLayout title="About" description={`About ${SITE.name}, DevOps and platform engineer.`}>
+<BaseLayout title="About" description={`About ${SITE.name}, Platform Engineer from Brazil.`}>
   <DepthZone id="about" depth={0} band={0}>
     <div class="intro">
       <div>
@@ -26,17 +72,20 @@ const timeline = [
         <h1>Hi, I'm Bernardo.</h1>
         <div class="prose">
           <p>
-            I'm a DevOps and platform engineer. I spend my days on Azure, Kubernetes and GitHub,
-            designing the platforms and pipelines that let teams ship, and lately a good part of
-            that is architecture for AI agents.
+            I'm a platform engineer from Brazil. Over the last five years I've worked in healthcare,
+            in software that runs steel plants, and in two consultancies, with teams in Germany,
+            India and Poland along the way.
           </p>
           <p>
-            What I enjoy most is the space between layers: sitting with the business to understand
-            the problem, working with developers on how it gets built, and making sure the
-            infrastructure underneath is solid, secure and boring in the best way.
+            What I like most is building the paved road: golden paths, GitOps and observability that
+            let product teams ship without thinking about the plumbing. Lately that road leads to AI
+            agents, and to the unglamorous parts that make them safe to run: least privilege,
+            budgets and telemetry.
           </p>
-          <p class="todo">
-            TODO: one or two sentences in your own voice (where you are, what you're looking for).
+          <p>
+            I also care about the people on the road. Some of my favourite work was bringing
+            engineering practices to teams that never had them, from low-code developers to data
+            scientists.
           </p>
         </div>
       </div>
@@ -45,12 +94,13 @@ const timeline = [
         root="captain"
         entries={[
           { key: 'name', value: SITE.name },
-          { key: 'role', value: 'devops · platform · ai' },
-          { key: 'layers', value: ['product', 'dev', 'infra'] },
-          { key: 'stack', value: ['azure', 'k8s', 'helm', 'github'] },
-          { key: 'also_teaches', value: true, comment: 'workshops' },
-          { key: 'off_the_cluster', value: 'music' },
-          { key: 'status', value: 'open to conversations' },
+          { key: 'role', value: 'platform engineer' },
+          { key: 'based', value: 'brazil (utc-3) · remote' },
+          { key: 'clouds', value: ['azure', 'aws'] },
+          { key: 'stack', value: ['kubernetes', 'terraform', 'argocd', 'opentelemetry'] },
+          { key: 'certs', value: '8x microsoft certified' },
+          { key: 'writes', value: "captain devops' notes" },
+          { key: 'off_the_cluster', value: ['speedcubing', 'homelab'] },
         ]}
       />
     </div>
@@ -61,35 +111,83 @@ const timeline = [
       {timeline.map((t) => (
         <li>
           <span class="mono when">{t.when}</span>
-          <span class:list={{ todo: t.when === 'TODO' }}>{t.what}</span>
+          <div>
+            <h3>{t.where}</h3>
+            <p>{t.what}</p>
+          </div>
         </li>
       ))}
     </ol>
+    <div class="two-col">
+      <div>
+        <h3 class="sub">Education</h3>
+        <ul class="plain">
+          {education.map((e) => (
+            <li>
+              <span class="mono when">{e.when}</span> {e.what}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h3 class="sub">Certifications</h3>
+        <ul class="plain certs">
+          {certs.map((c) => (
+            <li>Microsoft Certified: {c}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
   </DepthZone>
 
-  <DepthZone id="teaching" depth={30} band={2} title="Teaching" contours="slope">
-    <div class="prose">
-      <p>
-        I run hands-on AI workshops for business teams. The format is practical: short explanations,
-        checkpoints where everyone builds something, and live demos on real problems from their own
-        work.
-      </p>
-      <p class="todo">TODO: audiences, number of editions, a quote from a participant.</p>
-    </div>
+  <DepthZone id="talks" depth={30} band={2} title="Talks & writing" contours="slope">
+    <ul class="talks">
+      {talks.map((t) => (
+        <li>
+          <span class="mono when">{t.when}</span>
+          <div>
+            <h3>{t.what}</h3>
+            <p class="mono">{t.where}</p>
+            {t.note && <p>{t.note}</p>}
+          </div>
+        </li>
+      ))}
+      <li>
+        <span class="mono when">ongoing</span>
+        <div>
+          <h3>
+            <a href={LINKS.blog}>Captain DevOps' Notes ↗</a>
+          </h3>
+          <p class="mono">Blog</p>
+          <p>Where I write about what I'm learning on the job, so it outlives the project.</p>
+        </div>
+      </li>
+    </ul>
   </DepthZone>
 
   <DepthZone id="off-the-cluster" depth={45} band={2} title="Off the cluster" contours="basin">
     <div class="prose">
-      <p>Away from the terminal, I make music.</p>
-      <p class="todo">TODO: instrument, band or project, a link if you want to share it.</p>
+      <p>
+        I once got first place at a national <a href={LINKS.wca}>speedcubing</a> competition.
+        Doesn't matter if it was only first place in the rookies category, I still got a medal
+        afterwards.
+      </p>
+      <p>
+        I also spent a few months as one of two Unity programmers on EcoTour GL, an award-winning
+        mobile visual novel, and automated its weekly builds with GitHub Actions.
+      </p>
+      <p>
+        At home, an old laptop runs a k3s homelab with ArgoCD, SOPS and an OpenTelemetry + LGTM
+        stack, mostly built pairing with Claude Code.
+      </p>
     </div>
   </DepthZone>
 
   <DepthZone id="reach" depth={60} band={3} title="Contact" contours="trench">
     <ul class="contact-links">
-      {contact.map((c) => (
+      {CONTACT.map((c) => (
         <li>
-          <a href={c.href} rel="me">
+          <a href={c.href} rel={c.href.startsWith('mailto:') ? undefined : 'me'}>
             {c.label} <span aria-hidden="true">↗</span>
           </a>
         </li>
@@ -106,26 +204,72 @@ const timeline = [
     align-items: start;
     padding: 24px 0;
   }
+  .intro > * {
+    min-width: 0;
+  }
   h1 {
     margin: 14px 0 24px;
     font-size: clamp(2.2rem, 4.5vw, 3.4rem);
   }
-  .timeline {
+  .timeline,
+  .talks {
     list-style: none;
     border-top: var(--hairline);
-    max-width: 760px;
+    max-width: 860px;
   }
-  .timeline li {
+  .timeline li,
+  .talks li {
     display: grid;
     grid-template-columns: 140px 1fr;
     gap: 16px;
-    padding: 16px 0;
+    padding: 18px 0;
     border-bottom: var(--hairline);
+  }
+  .timeline h3,
+  .talks h3 {
+    font-size: 1.2rem;
+  }
+  .timeline p,
+  .talks p {
+    color: var(--ink-soft);
+    max-width: 64ch;
+  }
+  .talks h3 a {
+    text-decoration: none;
   }
   .when {
     color: var(--accent-ink);
     font-size: 0.8rem;
-    padding-top: 3px;
+    padding-top: 4px;
+  }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    margin-top: 48px;
+    max-width: 960px;
+  }
+  .sub {
+    font-size: 1.15rem;
+    margin-bottom: 12px;
+  }
+  .plain {
+    list-style: none;
+    display: grid;
+    gap: 8px;
+    font-size: 0.95rem;
+  }
+  .certs li {
+    padding-left: 16px;
+    position: relative;
+  }
+  .certs li::before {
+    content: '◆';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 0.6rem;
+    top: 0.45em;
   }
   .contact-links {
     list-style: none;
@@ -139,11 +283,13 @@ const timeline = [
     color: var(--accent-ink);
   }
   @media (max-width: 860px) {
-    .intro {
+    .intro,
+    .two-col {
       grid-template-columns: 1fr;
       gap: 40px;
     }
-    .timeline li {
+    .timeline li,
+    .talks li {
       grid-template-columns: 1fr;
       gap: 2px;
     }

@@ -12,12 +12,7 @@ export default defineConfig({
   site,
   base,
   trailingSlash: 'ignore',
-  integrations: [
-    mdx(),
-    sitemap({
-      filter: (page) => !page.includes('/type-specimen'),
-    }),
-  ],
+  integrations: [mdx(), sitemap()],
   markdown: {
     shikiConfig: { theme: 'github-light' },
   },

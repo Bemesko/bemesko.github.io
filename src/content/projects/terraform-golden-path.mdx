@@ -1,0 +1,39 @@
+---
+title: A Terraform golden path for client environments
+summary: A module library for Azure, Entra ID and GitHub that cut provisioning of a standard product from 20 hours to 2, and what happened to it next.
+year: 2025
+company: SOU
+role: Author and maintainer
+team: Me, plus 3 engineers as users
+stack: [Terraform, Azure, Entra ID, GitHub Actions, Power BI Embedded, Microsoft Fabric]
+area: iac · platform
+order: 10
+star:
+  situation: Every client at the consultancy got bespoke infrastructure. A standard Power BI Embedded portal took about 20 hours to provision end to end.
+  task: Cut customization and delivery time with reusable infrastructure.
+  action: Built a library of 6 full-environment modules and 23 resource modules, and onboarded colleagues with hands-on sessions.
+  result: Provisioning dropped from 20 hours to 2 (my estimate on the before/after scope), across 6 clients.
+---
+
+## The problem
+
+At a consultancy, every new client tends to get infrastructure built by hand, slightly differently each time. One of our standard products, a Power BI Embedded portal with its Azure resources, Entra ID apps and permissions, and a GitHub CI/CD pipeline, took around 20 hours to stand up.
+
+## What I built
+
+A Terraform library with **6 modules that deploy a complete environment** and **23 resource modules** they're composed from. A few pieces worth mentioning:
+
+- A client's hand-built Application Gateway turned into a versioned module (v1.0.0) that others could reuse.
+- A module and script to start and stop Microsoft Fabric capacity on a schedule, so idle capacity stops costing money.
+- Hands-on sessions with colleagues, after which three people on the Azure squad used the modules in their own projects.
+
+## Results
+
+- Provisioning the portal went from **20 hours to 2** (my estimate, comparing the scope before and after).
+- **6 clients** received infrastructure built from the modules.
+
+## What happened next
+
+Today only the Power BI Embedded module is still in use. Once GitHub Copilot got good enough, generating Terraform or Bicep from scratch for each client became faster than maintaining a shared library.
+
+That taught me something I now look for early: a golden path only lasts if it stays cheaper than the alternative, and the alternatives change fast. Few of the platform pieces I built there ended up institutionalized, and I'd now spend more effort on adoption and ownership than on module count.

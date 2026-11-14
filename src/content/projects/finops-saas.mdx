@@ -1,0 +1,48 @@
+---
+title: FinOps for a SaaS client
+summary: A cost assessment and savings plan that reached US$ 21k per month in reported savings, 121% of the target, and kept the client.
+year: 2026
+company: SOU
+role: FinOps lead (diagnosis and methodology)
+team: 2 on the assessment, plus PMO and executors
+stack: [Azure Cost Management, AKS, Azure SQL, Storage, ACR, Azure DevOps]
+area: finops · azure
+order: 20
+star:
+  situation: A SaaS client's main Azure subscription cost about US$ 40k a month, and the partnership was up for renewal.
+  task: Diagnose, plan and partly execute savings within the hours already contracted.
+  action: Fortnightly sprints across rightsizing, storage tiers, proxy consolidation, AKS region and tagging policies.
+  result: US$ 21.2k/month in reported savings, 121% of the US$ 17.5k target. The client renewed.
+---
+
+## The problem
+
+The client's main subscription was costing around **US$ 40k per month**. They wanted that down without buying extra hours, and the decision to continue the partnership was a few months away.
+
+## The approach
+
+With a colleague I ran the diagnosis and wrote the methodology, then went straight into fortnightly sprints without a separate discovery phase. The workstreams:
+
+- **Rightsizing** VMs and SQL, dropping high availability from dev and QA.
+- **Storage** redundancy and tiers.
+- **Proxies** consolidated from 9 VMs to 6, keeping the agreed 2% tolerance for failed requests.
+- **AKS** moved to a region in Brazil.
+- **Tags and policies** to surface idle resources.
+
+I executed the Azure DevOps licence clean-up, the container registry clean-up and RBAC on AKS myself. Not everything paid off: a SQL elastic pool looked promising and didn't, so we dropped it.
+
+## Results
+
+| Workstream | Reported savings / month |
+| ---------- | ------------------------ |
+| AKS        | US$ 9,191                |
+| Storage    | US$ 5,728                |
+| SQL        | US$ 3,197                |
+| VMs        | US$ 2,174                |
+| **Total**  | **US$ 21,195**           |
+
+That's **121% of the US$ 17,500 target**, as reported in the PMO status. The client decided to stay, which kept both the account and its Azure consumption.
+
+## Lessons
+
+Cost work touches production. The registry retention we introduced here later removed images that production still needed; the post-mortem led to separate production tags, retention reviews and alerts on image pull failures.

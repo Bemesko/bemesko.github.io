@@ -9,6 +9,10 @@
   --line: #c9c0a9;
   --accent: #1f56a8;
   --accent-ink: #1a4c96; /* accent for small text on the darker bands */
+  /* text on the navy header/footer */
+  --on-ink: #f3efe4;
+  --on-ink-muted: #c6cfdc;
+  --on-ink-accent: #9dbcf0;
   --code-bg: #14233a;
   --code-fg: #e7edf6;
   --code-comment: #8796ad;

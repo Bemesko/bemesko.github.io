@@ -19,19 +19,20 @@ Requires Node 22.12+ (`.nvmrc` pins 24).
 | ---------------------------- | --------------------------------------------------------------------------------------------- |
 | `src/site.ts`                | Name, brand, contact links, active type pairing                                               |
 | `src/styles/tokens.css`      | Palette (paper, ink, cobalt, depth bands) and layout tokens                                   |
-| `src/styles/fonts.css`       | Active font pairing (`fonts/editorial.css`, `chart.css`, `plex.css`)                          |
+| `src/styles/fonts.css`       | Active font pairing                                                                           |
 | `src/components/`            | `DepthGauge`, `DepthZone`, `Contours`, `LayeredDiagram`, `YamlCard`, `StarGrid`, `ProjectRow` |
 | `src/content/projects/*.mdx` | Case studies. `draft: true` = visible only in dev                                             |
 | `src/data/diagrams.ts`       | Layered diagrams referenced by a project's `diagram` field                                    |
-| `src/pages/`                 | Home, about, case study route, 404, type specimen                                             |
+| `src/data/toolbox.ts`        | Tools shown on /toolbox and how often each one is used                                        |
+| `src/pages/`                 | Home, toolbox, about, case study route, 404                                                   |
 
 ### Adding a case study
 
 Create `src/content/projects/<slug>.mdx` with the frontmatter described in `src/content.config.ts`. Set `featured: true` on the one shown on the home page. Search for `TODO` to find copy that still needs real content.
 
-### Changing fonts
+### Fonts
 
-Compare pairings at `/type-specimen`. To switch, change the import in `src/styles/fonts.css` and `typePairing` in `src/site.ts`. After choosing, delete `src/pages/type-specimen.astro` and the unused pairing files and font packages.
+The site uses the "Technical chart" pairing (Space Grotesk + Source Serif 4 + JetBrains Mono). Fonts are self-hosted through `@fontsource` packages; the variables live in `src/styles/fonts/chart.css`.
 
 ## Deploy
 

@@ -1,0 +1,50 @@
+---
+title: AI agents for retail pricing
+summary: Three agents, an MCP data gateway and an app that let a retailer's pricing team test hypotheses in plain language, delivered by a team new to software engineering.
+year: 2026
+company: SOU
+role: Technical lead
+team: 9 people (6 consultancy, 3 client)
+stack: [Azure, Azure AI Foundry, MCP, AdonisJS, GCP BigQuery, Entra ID]
+area: ai · platform
+featured: true
+order: 1
+diagram: pricing-agents
+star:
+  situation: A retail chain wanted AI agents to support pricing with data in BigQuery. Each hypothesis-testing cycle took about two weeks.
+  task: Lead a team of low-code developers through agentic development, and avoid building something that didn't solve the real problem.
+  action: Ran discovery and sprints with the client and designed a cloud-native architecture with least-privilege data access, budgets and alerts.
+  result: First production release 66 days after kickoff, with the app, the data gateway and all three agents in one release.
+---
+
+import LayeredDiagram from '../../components/LayeredDiagram.astro';
+import { diagrams } from '../../data/diagrams';
+
+## The problem
+
+The client's pricing team tests hypotheses against data that lives in Google BigQuery. Each cycle, from question to answer, took around two weeks. They wanted AI agents to shorten that loop.
+
+The team building it was mostly low-code developers. So the challenge was as much about _how_ we built as _what_ we built: bringing software engineering practices to an AI project instead of treating it as one more low-code project.
+
+## Starting from the product
+
+Before writing any infrastructure I had to study product management and prototyping techniques, to reduce the risk of building something that wouldn't solve the client's pain. I ran the discovery and the sprints with the client directly.
+
+One decision mattered more than any technical one: the client wanted a 98% accuracy target from day one. We agreed to postpone it until there was a real baseline, and to measure separately what drives that number: data quality, diagnostics, approved recommendations and financial outcome.
+
+## The architecture
+
+<LayeredDiagram id="fig-pricing" {...diagrams['pricing-agents']} />
+
+- **Three agents on Azure AI Foundry**, each with a narrow job, orchestrated behind an app the pricing team uses in natural language.
+- **An MCP server as the data gateway.** Agents never talk to BigQuery directly; one service centralizes every query.
+- **Least privilege by default.** Segregated resources, and credentials that can read only the tables the agents actually need.
+- **Cost guardrails from the start.** Budgets, tags and alerts were part of the first deploy, not a follow-up.
+
+## Where it stands
+
+The first production release shipped on day 66, with the app, the data gateway and the three agents in a single release. The client tested the first version in natural language a few days later. The project runs into early 2027.
+
+<p class="todo">
+  TODO: update with usage, accuracy and cycle-time numbers once the client starts using it.
+</p>

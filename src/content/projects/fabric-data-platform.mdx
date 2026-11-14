@@ -1,0 +1,33 @@
+---
+title: A governed data platform on Microsoft Fabric
+summary: From per-user data lake access and notebooks on laptops to a central Fabric environment the client's IT can run on their own, on the smallest capacity.
+year: 2026
+company: SOU
+role: Lead technical specialist
+stack: [Microsoft Fabric, Lakehouse, OneLake Security, ADLS Gen2, Entra ID, Spark]
+area: data · governance
+order: 60
+draft: true
+star:
+  situation: Data lake access was granted user by user, and analysts ran Python notebooks on their own machines.
+  task: Govern access and centralize the data environment so IT could run it after the project.
+  action: Read-only Entra ID groups, a Fabric F2 capacity with 6 workspaces, ADLS shortcuts and a shared, tuned Spark pool; runbook and handover.
+  result: Formal acceptance by the client, several developers on F2, and 2 new leads.
+---
+
+<p class="todo">DRAFT, not published. Client anonymized; the project value is left out.</p>
+
+## The setup
+
+- **Access through groups, not people**: read-only Entra ID groups replaced per-user grants on the data lake.
+- **One Fabric F2 capacity** with 6 workspaces, one central and five per business area, and 3 shortcuts to the existing ADLS Gen2.
+- **A shared Spark pool** with high concurrency, session timeouts and capacity monitoring.
+- **Runbook, hands-on sessions and handover** so the client's IT could administer it alone.
+
+## The trade-off
+
+Instead of buying a bigger capacity, tuning the shared pool kept several developers working on F2, the smallest tier. The client only moved to F4 when new analysts joined.
+
+## Results
+
+Formal acceptance from the client, and two new leads for the consultancy.
