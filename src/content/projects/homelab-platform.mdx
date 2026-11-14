@@ -1,0 +1,60 @@
+---
+title: A production-grade platform for a household of users
+summary: A k3s homelab on two old laptops, run like a company platform. GitOps, a golden path for new apps, encrypted secrets, full OpenTelemetry observability and post-mortems for every incident.
+year: 2026
+company: Personal project
+role: Platform engineer, with Claude Code as pair
+team: Just me
+stack: [k3s, ArgoCD, Ansible, SOPS + age, Tailscale, OpenTelemetry, LGTM, CloudNativePG]
+area: platform · homelab
+featured: true
+order: 0
+diagram: homelab
+star:
+  situation: Photos, notes and home automation lived on a NAS and a spare laptop, set up by hand and failing silently.
+  task: Run them like a real platform, reproducible from scratch, safe to publish in the open, and easy to ship new apps onto.
+  action: Ansible bootstrap, ArgoCD GitOps, a repo template as golden path, SOPS secrets, OpenTelemetry with ~40 alerts, and an ADR for every decision.
+  result: A new app went from first commit to running in the cluster in under 2.5 hours, then shipped 11 releases in 6 days through pull requests.
+---
+
+import LayeredDiagram from '../../components/LayeredDiagram.astro';
+import { diagrams } from '../../data/diagrams';
+
+## Why a homelab is on this list
+
+Most of my platform work happens inside client environments I can't show. The homelab is the opposite: [every repository is public](https://github.com/bernats-homelab), and it uses the same practices I'd bring to a company. It also has real users. My household relies on it every day for photos, notes, groceries and home automation, so when it breaks, someone notices.
+
+It has been evolving since early 2025 (Terraform for the GitHub org, host configuration, a first set of standard services). The current generation was rebuilt from scratch in two weeks, pairing with Claude Code.
+
+## The platform
+
+<LayeredDiagram id="fig-homelab" {...diagrams['homelab']} />
+
+- **Reproducible from an empty disk.** An Ansible playbook with 11 roles bootstraps k3s on an old laptop, remotely, over SSH on the tailnet. CI runs it twice on a fresh runner and fails if the second run changes anything.
+- **Everything else through GitOps.** ArgoCD manages itself and every workload from an app-of-apps chart. Chart versions live in a single file that Ansible reads too.
+- **Nothing exposed to the internet.** The Tailscale operator gives each app an HTTPS ingress on the private tailnet.
+- **Secrets in a public repo, safely.** SOPS + age, with KSOPS decrypting inside ArgoCD using a cluster-only key. Hooks block plaintext secrets, and gitleaks blocks anything that identifies the network.
+- **Pinned supply chain.** Every binary is pinned by version and sha256, every image by digest, and Grafana dashboards are vendored with a lock file.
+- **Guardrails against myself.** A `no-lockout` hook rejects any Ansible task that touches SSH, the firewall or the host network, so I can't cut off my own remote access.
+
+## The golden path
+
+New apps don't live in the platform repo. They start from a [repository template](https://github.com/bernats-homelab/repotpl-k8s-app) that already has CI, `kube-linter` rules (probes, resource requests, non-root, read-only filesystem), a release workflow and an OpenTelemetry contract. Releasing publishes an image by digest and a semver tag, and the job prints the snippet for a pull request to the central repo. ArgoCD deploys apps into a restricted project that can't create cluster-wide resources or touch platform namespaces.
+
+The first real customer was [grocery-ops](https://github.com/Bemesko/grocery-ops), a shopping-list PWA my household uses at the supermarket. It went from **first commit to running in the cluster in under 2.5 hours**, then shipped **11 releases in 6 days**, each one through a pull request. Its CI spins up k3s on the runner and checks that traces and metrics actually reach the collector.
+
+## Observability
+
+Everything speaks OTLP: an OpenTelemetry Collector in the cluster, an agent on each host, and a lean Loki, Grafana, Tempo and Mimir stack behind it. There are around **40 alert rules**, from ArgoCD drift and Postgres health to disk saturation, NAS replication and "the server is running on battery". grocery-ops emits business metrics too: purchases, totals and cart size.
+
+## Incidents, and what changed
+
+Running it for real means it breaks for real. Each incident ends in an architecture decision record. There are 12 so far.
+
+- **An OS update froze the cluster.** Unattended upgrades installed a new kernel at a random morning time. The entry-level SSD saturated writing at 3–8 MB/s, and the SQLite databases behind Grafana locked up for about seven minutes. The fix was fixed update windows at idle CPU and I/O priority, and kernel upgrades only through a `make` target that reboots and then verifies the node, every ArgoCD application, Postgres and AppArmor. On top of that came WAL mode for Grafana and a new disk saturation alert. I also tested a more aggressive kubelet image GC and rejected it with data: it would have freed zero bytes.
+- **File sync had silently stopped for weeks.** A hand-installed Syncthing on the NAS didn't come back after a reboot. It's now managed by Ansible, and the NAS reports its own health.
+- **Laptops make odd servers.** A power role keeps them from sleeping when the lid closes and caps the battery at 80%. A guardian alerts when the power is out, shuts down cleanly at 10% and sets the RTC to wake up and check whether power is back.
+
+## What's next
+
+The [open issues](https://github.com/bernats-homelab/2026-kubernetes/issues) read like a platform roadmap: SLOs with Sloth, image promotion with Kargo, cost visibility with OpenCost, an app catalog, and off-site backups with restic.

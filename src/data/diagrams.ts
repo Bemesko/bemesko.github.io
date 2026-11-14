@@ -13,6 +13,34 @@ export interface DiagramSpec {
 }
 
 export const diagrams: Record<string, DiagramSpec> = {
+  homelab: {
+    caption: 'Vertical cut of the homelab. Use the buttons to isolate each layer.',
+    layers: [
+      { id: 'p', label: 'Product' },
+      { id: 'd', label: 'Development' },
+      { id: 'i', label: 'Infrastructure' },
+    ],
+    nodes: [
+      { layer: 'p', x: 60, w: 200, title: 'Household', sub: 'phones on the tailnet' },
+      { layer: 'p', x: 470, w: 230, title: 'Self-hosted apps', sub: 'photos · notes · groceries' },
+      { layer: 'd', x: 60, w: 170, title: 'App template', sub: 'init.sh · kube-linter' },
+      { layer: 'd', x: 280, w: 200, title: 'Release workflow', sub: 'image @digest · semver tag' },
+      { layer: 'd', x: 530, w: 190, title: 'PR to central repo', sub: 'targetRevision: vX.Y.Z' },
+      { layer: 'i', x: 60, w: 170, title: 'Ansible', sub: '11 roles · idempotent' },
+      { layer: 'i', x: 280, w: 200, title: 'k3s + ArgoCD', sub: 'app-of-apps · ksops' },
+      { layer: 'i', x: 530, w: 190, title: 'NAS + OTel/LGTM', sub: 'nfs · ~40 alerts' },
+    ],
+    edges: [
+      { layer: 'p', d: 'M260 55 L470 55', flow: true },
+      { layer: 'd', d: 'M230 155 L280 155', flow: true },
+      { layer: 'd', d: 'M480 155 L530 155', flow: true },
+      { layer: 'd', d: 'M625 178 L625 205 L380 205 L380 232', flow: true },
+      { layer: 'i', d: 'M230 255 L280 255' },
+      { layer: 'i', d: 'M480 255 L530 255' },
+      { layer: 'i', d: 'M330 232 L330 215 L255 215 L255 105 L585 105 L585 78', flow: true },
+    ],
+    notes: [{ x: 420, y: 196, text: 'ships only through Git', rotate: -2 }],
+  },
   'pricing-agents': {
     caption: 'Vertical cut of the system. Use the buttons to isolate each layer.',
     layers: [
