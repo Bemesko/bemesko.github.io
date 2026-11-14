@@ -1,57 +1,84 @@
 ---
 /**
- * Fixed depth gauge. Stops are computed in the browser from the real
- * position of every [data-depth] section, so they always line up with the
- * content. Pages without depth sections just show scroll progress.
+ * Fixed depth gauge on a linear scale: a tick every 5 m and a label every
+ * 15 m, evenly spaced. Scroll position maps to depth through the
+ * [data-depth] sections, so reaching a section shows that section's depth.
+ * Pages without depth sections map scroll progress linearly to `max`.
  * On narrow screens it collapses into a thin progress bar at the top.
  */
 interface Props {
   /** depth reached at the bottom of pages without [data-depth] sections */
   max?: number;
 }
-const { max = 40 } = Astro.props;
+const { max = 45 } = Astro.props;
 ---
 
 <div class="gauge" data-max={max} aria-hidden="true">
   <span class="label">DEPTH</span>
   <div class="scale">
+    <div class="ticks"></div>
     <div class="fill"></div>
-    <div class="stops"></div>
   </div>
   <span class="val">0 m</span>
 </div>
 
 <script>
+  const MINOR = 5;
+  const MAJOR = 15;
+
   function initGauge() {
     const gauge = document.querySelector<HTMLElement>('.gauge');
     if (!gauge) return;
-    const stopsEl = gauge.querySelector<HTMLElement>('.stops')!;
+    const ticksEl = gauge.querySelector<HTMLElement>('.ticks')!;
     const val = gauge.querySelector<HTMLElement>('.val')!;
-    const max = Number(gauge.dataset.max) || 40;
-    let stops: { depth: number; frac: number; el: HTMLAnchorElement }[] = [];
+    const fallbackMax = Number(gauge.dataset.max) || 45;
+    let stops: { depth: number; frac: number }[] = [];
+    let labels: { depth: number; el: HTMLElement }[] = [];
+    let scaleMax = fallbackMax;
 
     const maxScroll = () => Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+
+    /* Ticks depend only on the deepest depth on the page. */
+    function drawScale() {
+      ticksEl.replaceChildren();
+      labels = [];
+      for (let d = 0; d <= scaleMax; d += MINOR) {
+        const tick = document.createElement('span');
+        tick.className = d % MAJOR === 0 ? 'tick major' : 'tick';
+        tick.style.top = `${(d / scaleMax) * 100}%`;
+        ticksEl.append(tick);
+        if (d % MAJOR === 0) {
+          const label = document.createElement('span');
+          label.className = 'num';
+          label.textContent = String(d);
+          label.style.top = tick.style.top;
+          ticksEl.append(label);
+          labels.push({ depth: d, el: label });
+        }
+      }
+    }
 
     function layout() {
       const sections = [...document.querySelectorAll<HTMLElement>('[data-depth]')];
       const total = maxScroll();
-      stopsEl.replaceChildren();
       stops = sections.map((s) => {
         const top = s.getBoundingClientRect().top + window.scrollY;
-        const frac = Math.min(1, Math.max(0, top / total));
-        const el = document.createElement('a');
-        el.href = `#${s.id}`;
-        el.tabIndex = -1;
-        el.textContent = s.dataset.depth ?? '';
-        el.style.top = `${frac * 100}%`;
-        stopsEl.append(el);
-        return { depth: Number(s.dataset.depth), frac, el };
+        return {
+          depth: Number(s.dataset.depth),
+          frac: Math.min(1, Math.max(0, top / total)),
+        };
       });
+      const deepest = stops.length ? Math.max(...stops.map((s) => s.depth)) : fallbackMax;
+      const nextMax = Math.max(MAJOR, Math.ceil(deepest / MAJOR) * MAJOR);
+      if (nextMax !== scaleMax || ticksEl.childElementCount === 0) {
+        scaleMax = nextMax;
+        drawScale();
+      }
       update();
     }
 
     function depthAt(p: number) {
-      if (stops.length === 0) return p * max;
+      if (stops.length === 0) return p * fallbackMax;
       if (p <= stops[0].frac) return stops[0].depth;
       for (let i = 0; i < stops.length - 1; i++) {
         const a = stops[i];
@@ -66,9 +93,12 @@ const { max = 40 } = Astro.props;
 
     function update() {
       const p = Math.min(1, Math.max(0, window.scrollY / maxScroll()));
-      gauge!.style.setProperty('--p', String(p));
-      val.textContent = `${Math.round(depthAt(p))} m`;
-      for (const s of stops) s.el.classList.toggle('on', p >= s.frac - 0.001);
+      const depth = depthAt(p);
+      gauge!.style.setProperty('--p', String(depth / scaleMax));
+      // the mobile bar shows plain scroll progress
+      gauge!.style.setProperty('--scroll', String(p));
+      val.textContent = `${Math.round(depth)} m`;
+      for (const l of labels) l.el.classList.toggle('on', depth >= l.depth - 0.5);
     }
 
     let raf = 0;
@@ -87,13 +117,14 @@ const { max = 40 } = Astro.props;
 <style>
   .gauge {
     --p: 0;
+    --scroll: 0;
     position: fixed;
     left: 0;
     top: 0;
     bottom: 0;
     width: var(--gauge-w);
-    border-right: var(--hairline);
-    background: var(--paper);
+    background: var(--ink);
+    color: var(--on-ink);
     z-index: 10;
     display: flex;
     flex-direction: column;
@@ -104,16 +135,41 @@ const { max = 40 } = Astro.props;
     font-family: var(--font-mono);
     font-size: 0.6rem;
     letter-spacing: 0.08em;
-    color: var(--muted);
+    color: var(--on-ink-muted);
   }
   .scale {
     flex: 1;
     width: 100%;
     position: relative;
-    margin-top: 16px;
-    background:
-      repeating-linear-gradient(var(--ink) 0 1px, transparent 1px 12px) right / 10px 100% no-repeat,
-      repeating-linear-gradient(var(--ink) 0 1px, transparent 1px 60px) right / 20px 100% no-repeat;
+    /* room so the first and last labels aren't clipped */
+    margin: 22px 0 10px;
+  }
+  .ticks {
+    position: absolute;
+    inset: 0;
+  }
+  .ticks :global(.tick) {
+    position: absolute;
+    right: 0;
+    width: 8px;
+    height: 1px;
+    background: var(--on-ink-muted);
+    opacity: 0.6;
+  }
+  .ticks :global(.tick.major) {
+    width: 18px;
+    opacity: 1;
+  }
+  .ticks :global(.num) {
+    position: absolute;
+    left: 10px;
+    transform: translateY(-50%);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    color: var(--on-ink-muted);
+  }
+  .ticks :global(.num.on) {
+    color: var(--on-ink-accent);
   }
   .fill {
     position: absolute;
@@ -121,30 +177,19 @@ const { max = 40 } = Astro.props;
     top: 0;
     width: 3px;
     height: calc(var(--p) * 100%);
-    background: var(--accent);
-  }
-  .stops {
-    position: absolute;
-    inset: 0;
-  }
-  .stops :global(a) {
-    position: absolute;
-    left: 10px;
-    transform: translateY(-50%);
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    text-decoration: none;
-    color: var(--muted);
-  }
-  .stops :global(a.on) {
-    color: var(--accent);
+    background: var(--on-ink-accent);
   }
   .val {
     font-family: var(--font-mono);
     font-size: 0.7rem;
+    color: var(--on-ink);
     writing-mode: vertical-rl;
     transform: rotate(180deg);
-    margin-top: 12px;
+    /* fixed length so "5 m" and "60 m" don't resize the scale above */
+    flex: none;
+    height: 6ch;
+    text-align: end;
+    font-variant-numeric: tabular-nums;
   }
 
   @media (max-width: 860px) {
@@ -154,22 +199,21 @@ const { max = 40 } = Astro.props;
       width: auto;
       height: 3px;
       padding: 0;
-      border: 0;
       background: transparent;
     }
     .label,
     .val,
-    .stops {
+    .ticks {
       display: none;
     }
     .scale {
       margin: 0;
-      background: none;
       height: 3px;
     }
     .fill {
       height: 3px;
-      width: calc(var(--p) * 100%);
+      width: calc(var(--scroll) * 100%);
+      background: var(--accent);
     }
   }
 </style>
