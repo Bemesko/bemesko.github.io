@@ -20,9 +20,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 const path = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/';
 
 const nav = [
-  { href: url('/#work'), label: './work', current: false },
-  { href: url('/toolbox/'), label: './toolbox', current: path.startsWith('/toolbox') },
   { href: url('/about/'), label: './about', current: path.startsWith('/about') },
+  { href: url('/toolbox/'), label: './toolbox', current: path.startsWith('/toolbox') },
   { href: LINKS.blog, label: './blog ↗', current: false },
   { href: url('/#contact'), label: './contact', current: false },
 ];

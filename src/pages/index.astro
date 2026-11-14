@@ -8,6 +8,7 @@ import { getProjects } from '../lib/projects';
 import { diagrams } from '../data/diagrams';
 import { url } from '../lib/url';
 import { CONTACT, SITE } from '../site';
+import { certs, timeline } from '../data/career';
 
 const projects = await getProjects();
 const featured = projects.find((p) => p.data.featured);
@@ -41,38 +42,48 @@ const layers = [
           {SITE.name} · {SITE.role}
         </p>
         <h1>
-          I build the platforms product teams ship on,{' '}
-          <em>and the guardrails that put AI agents into production.</em>
+          Five years building platforms <em>for hospitals, steel plants and consultancies.</em>
         </h1>
         <p class="lead">
-          Platform engineer from Brazil with 5+ years on Kubernetes, Terraform and Azure. I design
-          golden paths, GitOps delivery and observability so teams ship faster with less toil, and
-          lately the least-privilege access, budgets and telemetry that AI agents need to run for
-          real.
+          I'm a platform engineer from Brazil. I build golden paths on Kubernetes, Terraform and
+          Azure, ship them through GitOps with observability built in, and lately set up the
+          least-privilege access, budgets and telemetry that AI agents need in production.
         </p>
-        <p class="hand note">writing code was never the bottleneck</p>
       </div>
       <aside class="cartouche" aria-label="At a glance">
-        <p class="cartouche-title">Chart of a career</p>
+        <p class="cartouche-title">At a glance</p>
         <dl>
           <div>
-            <dt>Focus</dt>
-            <dd>Platform engineering · AI infrastructure</dd>
+            <dt>Experience</dt>
+            <dd>
+              <ul class="roles">
+                {timeline.map((r) => (
+                  <li>
+                    <span>{r.where}</span>
+                    <span class="mono yrs">{r.short}</span>
+                  </li>
+                ))}
+              </ul>
+            </dd>
           </div>
           <div>
-            <dt>Waters</dt>
+            <dt>Certified</dt>
+            <dd>
+              {certs.length} Microsoft certifications, including {certs[0]}
+            </dd>
+          </div>
+          <div>
+            <dt>Stack</dt>
             <dd>Azure · AWS · Kubernetes · Terraform</dd>
-          </div>
-          <div>
-            <dt>Ports</dt>
-            <dd>Healthcare · Steel · Consulting</dd>
           </div>
           <div>
             <dt>Based</dt>
             <dd>Brazil (UTC−3) · Remote</dd>
           </div>
         </dl>
-        <p class="cartouche-scale mono">scale 1:1 · soundings in metres</p>
+        <a class="cartouche-more mono" href={url('/about/')}>
+          Full background <span aria-hidden="true">→</span>
+        </a>
       </aside>
     </div>
   </DepthZone>
@@ -216,14 +227,7 @@ const layers = [
     font-size: 1.12rem;
     color: var(--ink-soft);
   }
-  .note {
-    margin-top: 22px;
-    font-size: 1.15rem;
-    transform: rotate(-1.5deg);
-    transform-origin: left;
-  }
-
-  /* chart title block */
+  /* at-a-glance box */
   .cartouche {
     border: 1px solid var(--ink);
     outline: 0.5px solid var(--ink);
@@ -233,20 +237,37 @@ const layers = [
     margin: 6px;
   }
   .cartouche-title {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: 1.15rem;
-    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
     padding-bottom: 12px;
     margin-bottom: 12px;
     border-bottom: 0.5px solid var(--line);
   }
   .cartouche dl > div {
     display: grid;
-    grid-template-columns: 76px 1fr;
+    grid-template-columns: 92px 1fr;
     gap: 12px;
-    padding: 6px 0;
+    padding: 7px 0;
     font-size: 0.95rem;
+  }
+  .roles {
+    list-style: none;
+    display: grid;
+    gap: 2px;
+  }
+  .roles li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .yrs {
+    font-size: 0.75rem;
+    color: var(--muted);
+    white-space: nowrap;
+    padding-top: 3px;
   }
   .cartouche dt {
     font-family: var(--font-mono);
@@ -256,10 +277,13 @@ const layers = [
     color: var(--muted);
     padding-top: 3px;
   }
-  .cartouche-scale {
+  .cartouche-more {
+    display: block;
     margin-top: 12px;
-    text-align: center;
-    font-size: 0.62rem;
+    padding-top: 12px;
+    border-top: 0.5px solid var(--line);
+    font-size: 0.78rem;
+    color: var(--accent-ink);
   }
 
   .intro {
