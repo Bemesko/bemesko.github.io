@@ -1,7 +1,9 @@
 ---
 /**
- * Fixed depth gauge on a linear scale: a tick every 5 m and a label every
- * 15 m, evenly spaced. Scroll position maps to depth through the
+ * Fixed depth gauge on a linear scale. The label step follows the page's own
+ * section depths (their greatest common divisor), so a page in steps of 10 m
+ * is labelled every 10 m and one in steps of 15 m every 15 m, with minor
+ * ticks every 5 m in between. Scroll position maps to depth through the
  * [data-depth] sections, so reaching a section shows that section's depth.
  * Pages without depth sections map scroll progress linearly to `max`.
  * On narrow screens it collapses into a thin progress bar at the top.
@@ -23,8 +25,21 @@ const { max = 45 } = Astro.props;
 </div>
 
 <script>
-  const MINOR = 5;
-  const MAJOR = 15;
+  const DEFAULT_STEP = 15;
+  const MAX_LABELS = 8;
+  const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+
+  /** Label step shared by every section depth, widened if it would crowd the scale. */
+  function labelStep(depths: number[]) {
+    const nonzero = depths.filter((d) => d > 0);
+    let step = nonzero.length ? nonzero.reduce(gcd) : DEFAULT_STEP;
+    const deepest = Math.max(step, ...nonzero);
+    while (Math.ceil(deepest / step) > MAX_LABELS) step *= 2;
+    return step;
+  }
+
+  /** Minor ticks every 5 m when that divides the step evenly, else none. */
+  const tickStep = (step: number) => (step % 5 === 0 && step / 5 <= 6 ? 5 : step);
 
   function initGauge() {
     const gauge = document.querySelector<HTMLElement>('.gauge');
@@ -34,20 +49,23 @@ const { max = 45 } = Astro.props;
     const fallbackMax = Number(gauge.dataset.max) || 45;
     let stops: { depth: number; frac: number }[] = [];
     let labels: { depth: number; el: HTMLElement }[] = [];
-    let scaleMax = fallbackMax;
+    let scaleMax = 0;
+    let step = DEFAULT_STEP;
 
     const maxScroll = () => Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
 
-    /* Ticks depend only on the deepest depth on the page. */
+    /* Ticks depend only on the page's depths, not on scroll. */
     function drawScale() {
       ticksEl.replaceChildren();
       labels = [];
-      for (let d = 0; d <= scaleMax; d += MINOR) {
+      const minor = tickStep(step);
+      for (let d = 0; d <= scaleMax; d += minor) {
+        const major = d % step === 0;
         const tick = document.createElement('span');
-        tick.className = d % MAJOR === 0 ? 'tick major' : 'tick';
+        tick.className = major ? 'tick major' : 'tick';
         tick.style.top = `${(d / scaleMax) * 100}%`;
         ticksEl.append(tick);
-        if (d % MAJOR === 0) {
+        if (major) {
           const label = document.createElement('span');
           label.className = 'num';
           label.textContent = String(d);
@@ -68,10 +86,13 @@ const { max = 45 } = Astro.props;
           frac: Math.min(1, Math.max(0, top / total)),
         };
       });
-      const deepest = stops.length ? Math.max(...stops.map((s) => s.depth)) : fallbackMax;
-      const nextMax = Math.max(MAJOR, Math.ceil(deepest / MAJOR) * MAJOR);
-      if (nextMax !== scaleMax || ticksEl.childElementCount === 0) {
+      const depths = stops.map((s) => s.depth);
+      const nextStep = labelStep(depths);
+      const deepest = depths.length ? Math.max(...depths) : fallbackMax;
+      const nextMax = Math.max(nextStep, Math.ceil(deepest / nextStep) * nextStep);
+      if (nextMax !== scaleMax || nextStep !== step) {
         scaleMax = nextMax;
+        step = nextStep;
         drawScale();
       }
       update();
