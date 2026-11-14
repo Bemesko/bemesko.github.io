@@ -1,0 +1,228 @@
+---
+/**
+ * Vertical cut of a system in horizontal layers (e.g. product / dev / infra).
+ * Each layer is a 100-unit-tall band in a 760-wide viewBox; nodes sit inside
+ * their layer and edges are authored as SVG path strings. Buttons isolate one
+ * layer at a time.
+ */
+interface Layer {
+  id: string;
+  label: string;
+}
+interface Node {
+  layer: string;
+  x: number;
+  w?: number;
+  title: string;
+  sub?: string;
+}
+interface Edge {
+  layer: string;
+  d: string;
+  /** dashed cobalt line for data/flow; solid ink otherwise */
+  flow?: boolean;
+}
+interface Note {
+  x: number;
+  y: number;
+  text: string;
+  rotate?: number;
+}
+interface Props {
+  layers: Layer[];
+  nodes: Node[];
+  edges?: Edge[];
+  notes?: Note[];
+  caption: string;
+  label?: string;
+  /** unique per page when there is more than one diagram */
+  id?: string;
+}
+
+const { layers, nodes, edges = [], notes = [], caption, label = 'FIG. 01' } = Astro.props;
+const H = 100;
+const W = 760;
+const bands = ['var(--d0)', 'var(--d1)', 'var(--d2)', 'var(--d3)'];
+const yOf = (layerId: string) => layers.findIndex((l) => l.id === layerId) * H;
+const uid = Astro.props.id ?? 'layered-diagram';
+---
+
+<figure class="layered-diagram" data-layered-diagram>
+  <div class="toggle" role="group" aria-label="Highlight a layer">
+    <button type="button" data-l="all" aria-pressed="true">
+      all layers
+    </button>
+    {layers.map((l) => (
+      <button type="button" data-l={l.id} aria-pressed="false">
+        {l.label.toLowerCase()}
+      </button>
+    ))}
+  </div>
+  <div class="canvas">
+    <svg viewBox={`0 0 ${W} ${layers.length * H}`} role="img" aria-labelledby={`${uid}-cap`}>
+      {layers.map((l, i) => (
+        <g>
+          <rect y={i * H} width={W} height={H} style={`fill:${bands[i % bands.length]}`} />
+          <text x="8" y={i * H + 16} class="band-label">
+            {l.label.toUpperCase()}
+          </text>
+        </g>
+      ))}
+      {layers.map((l) => (
+        <g class="layer" data-l={l.id}>
+          {edges
+            .filter((e) => e.layer === l.id)
+            .map((e) => (
+              <path d={e.d} class:list={['edge', { flow: e.flow }]} />
+            ))}
+          {nodes
+            .filter((n) => n.layer === l.id)
+            .map((n) => {
+              const y = yOf(n.layer) + 32;
+              const w = n.w ?? 170;
+              return (
+                <g>
+                  <rect x={n.x} y={y} width={w} height="46" class="node" />
+                  <text x={n.x + 12} y={y + 20} class="node-title">
+                    {n.title.toUpperCase()}
+                  </text>
+                  {n.sub && (
+                    <text x={n.x + 12} y={y + 36} class="node-sub">
+                      {n.sub}
+                    </text>
+                  )}
+                </g>
+              );
+            })}
+        </g>
+      ))}
+      {notes.map((n) => (
+        <text
+          x={n.x}
+          y={n.y}
+          class="note"
+          transform={n.rotate ? `rotate(${n.rotate} ${n.x} ${n.y})` : undefined}
+        >
+          {n.text}
+        </text>
+      ))}
+    </svg>
+  </div>
+  <figcaption id={`${uid}-cap`}>
+    <span>{label}</span> · {caption}
+  </figcaption>
+</figure>
+
+<script>
+  for (const fig of document.querySelectorAll<HTMLElement>('[data-layered-diagram]')) {
+    const buttons = [...fig.querySelectorAll<HTMLButtonElement>('.toggle button')];
+    const layers = [...fig.querySelectorAll<SVGGElement>('.layer')];
+    for (const b of buttons) {
+      b.addEventListener('click', () => {
+        const l = b.dataset.l;
+        for (const x of buttons) x.setAttribute('aria-pressed', String(x === b));
+        fig.classList.toggle('dim', l !== 'all');
+        for (const g of layers) g.classList.toggle('active', g.dataset.l === l);
+      });
+    }
+  }
+</script>
+
+<style>
+  .layered-diagram {
+    margin: 28px 0;
+  }
+  .toggle {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .toggle button {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    background: transparent;
+    color: var(--ink);
+    border: var(--hairline);
+    padding: 6px 14px;
+    cursor: pointer;
+  }
+  .toggle button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .toggle button[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .canvas {
+    border: var(--hairline);
+    background: var(--paper);
+    padding: 16px;
+    overflow-x: auto;
+  }
+  svg {
+    display: block;
+    width: 100%;
+    min-width: 620px;
+    height: auto;
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+  .band-label {
+    fill: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+  .node {
+    fill: var(--paper);
+    stroke: var(--ink);
+    stroke-width: 1;
+  }
+  .node-title {
+    fill: var(--ink);
+    font-weight: 500;
+  }
+  .node-sub {
+    fill: var(--muted);
+  }
+  .edge {
+    fill: none;
+    stroke: var(--ink);
+    stroke-width: 1.2;
+  }
+  .edge.flow {
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    stroke-dasharray: 6 5;
+  }
+  .note {
+    font-family: var(--font-hand);
+    font-style: italic;
+    font-size: 14px;
+    fill: var(--accent);
+  }
+  .layer {
+    transition: opacity 0.3s;
+  }
+  .dim .layer {
+    opacity: 0.15;
+  }
+  .dim .layer.active {
+    opacity: 1;
+  }
+  figcaption {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-top: 10px;
+  }
+  figcaption span {
+    color: var(--accent-ink);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .layer {
+      transition: none;
+    }
+  }
+</style>

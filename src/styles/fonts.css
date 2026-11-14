@@ -1,0 +1,7 @@
+/*
+ * Active type pairing for the whole site.
+ * To switch pairings, change the import below and the class in
+ * src/layouts/BaseLayout.astro (TYPE_PAIRING). Options: editorial, chart, plex.
+ * Compare them at /type-specimen.
+ */
+@import './fonts/editorial.css';

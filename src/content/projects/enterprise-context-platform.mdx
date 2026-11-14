@@ -1,0 +1,46 @@
+---
+title: Enterprise context platform for AI agents
+summary: One trustworthy source of context for AI agents across ERPs, CRMs and documents, without mixing data between customers.
+year: 2026
+role: Platform architect
+team: 4 people
+stack: [Azure, PostgreSQL, pgvector, Agent Framework, Container Apps]
+area: ai · platform
+featured: true
+order: 1
+diagram: context-platform
+star:
+  situation: Company knowledge scattered across ERPs, CRMs and documents, both structured and unstructured.
+  task: Give agents a single place to get context, without coupling them to every source system.
+  action: A canonical schema, normalized ingestion and agentic retrieval, with isolation per customer.
+  result: 'TODO: real metric (time to answer, adoption, sources connected…)'
+---
+
+import LayeredDiagram from '../../components/LayeredDiagram.astro';
+import { diagrams } from '../../data/diagrams';
+
+## The problem
+
+Business knowledge rarely lives in one place. Orders sit in the ERP, relationships in the CRM, and the reasoning behind decisions in documents nobody can find. AI agents need all of it, and they need it with clear boundaries: one customer's data must never show up in another customer's answer.
+
+Wiring every agent straight to every source works for a demo and falls apart in production. Each new source multiplies integration work, and each agent ends up with its own idea of what a "customer" or an "order" is.
+
+## The approach
+
+We built a context layer between the sources and the agents. The figure below reads top to bottom: what the business asks for, how the team builds it, and where it runs.
+
+<LayeredDiagram id="fig-context-platform" {...diagrams['context-platform']} />
+
+- **Canonical schema.** Every source is mapped into one model of customers, products and documents, so agents reason about the business instead of about each system's quirks.
+- **Normalized ingestion.** Connectors pull from each source, clean and chunk the content, and store embeddings next to the structured data in PostgreSQL with pgvector.
+- **Agentic retrieval.** The orchestrator decides which mix of structured queries and semantic search answers a question, and every capability is covered by evals before it ships.
+- **Isolation by design.** Tenant boundaries are enforced in the data layer, not in prompts. Services run on Azure Container Apps with managed identities, so there are no secrets to leak.
+
+<p class="todo">
+  TODO: add one or two concrete decisions and trade-offs (e.g. why Postgres instead of a dedicated
+  vector DB, how tenant isolation is enforced).
+</p>
+
+## What I'd take to the next project
+
+<p class="todo">TODO: lessons learned, in your own words.</p>

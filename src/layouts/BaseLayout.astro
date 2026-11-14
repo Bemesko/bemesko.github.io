@@ -1,0 +1,155 @@
+---
+import '../styles/global.css';
+import DepthGauge from '../components/DepthGauge.astro';
+import { SITE } from '../site';
+import { url } from '../lib/url';
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+  /** depth reached at the bottom of the page when it has no depth sections */
+  gaugeMax?: number;
+  /** extra class on <html>, e.g. to override the type pairing */
+  htmlClass?: string;
+}
+
+const { title, description = SITE.description, noindex = false, gaugeMax, htmlClass } = Astro.props;
+const fullTitle = title ? `${title} · ${SITE.name}` : `${SITE.name} · ${SITE.role}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const path = Astro.url.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ''), '') || '/';
+
+const nav = [
+  { href: url('/#work'), label: './work', current: false },
+  { href: url('/about/'), label: './about', current: path.startsWith('/about') },
+  { href: url('/#contact'), label: './contact', current: false },
+];
+---
+
+<!doctype html>
+<html lang="en" class:list={[htmlClass ?? SITE.typePairing]}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
+    <link rel="sitemap" href={url('/sitemap-index.xml')} />
+    <meta name="theme-color" content="#F3EFE4" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">
+      Skip to content
+    </a>
+    <DepthGauge max={gaugeMax} />
+    <div class="page" id="top">
+      <header class="site-header">
+        <a class="logo" href={url('/')} aria-label={`${SITE.name}, home`}>
+          ~/<span>captain-devops</span>
+        </a>
+        <nav aria-label="Main">
+          <ul>
+            {nav.map((n) => (
+              <li>
+                <a href={n.href} aria-current={n.current ? 'page' : undefined}>
+                  {n.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </header>
+      <main id="content">
+        <slot />
+      </main>
+      <footer class="site-footer">
+        <span>
+          {SITE.brand} · {SITE.name} · {new Date().getFullYear()}
+        </span>
+        <a href="#top">back to the surface ↑</a>
+      </footer>
+    </div>
+  </body>
+</html>
+
+<style>
+  .page {
+    margin-left: var(--gauge-w);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  main {
+    flex: 1;
+  }
+  .site-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 22px var(--gutter);
+    border-bottom: 0.5px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+  }
+  .logo {
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .logo span {
+    color: var(--accent);
+  }
+  nav ul {
+    display: flex;
+    gap: 26px;
+    list-style: none;
+  }
+  nav a {
+    text-decoration: none;
+    color: var(--muted);
+  }
+  nav a:hover,
+  nav a[aria-current='page'] {
+    color: var(--accent);
+  }
+  .site-footer {
+    padding: 32px var(--gutter);
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+  }
+  .site-footer a {
+    text-decoration: none;
+  }
+  .site-footer a:hover {
+    color: #9dbcf0;
+  }
+  @media (max-width: 860px) {
+    .page {
+      margin-left: 0;
+    }
+    nav ul {
+      gap: 14px;
+    }
+  }
+  @media (max-width: 420px) {
+    .site-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+  }
+</style>

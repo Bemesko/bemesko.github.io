@@ -1,0 +1,58 @@
+---
+/** A small "file" card rendering a flat YAML document with syntax colours. */
+type Value = string | number | boolean | string[];
+interface Entry {
+  key: string;
+  value: Value;
+  comment?: string;
+}
+interface Props {
+  filename: string;
+  root: string;
+  entries: Entry[];
+}
+const { filename, root, entries } = Astro.props;
+---
+
+<pre class="yaml" data-file={filename}><span class="k">{root}</span>:
+{entries.map((e) => (
+  <>{'  '}<span class="k">{e.key}</span>: {Array.isArray(e.value) ? (
+    <>[{e.value.map((v, i) => <>{i > 0 && ', '}<span class="v">{v}</span></>)}]</>
+  ) : (
+    <span class="v">{String(e.value)}</span>
+  )}{e.comment && <span class="c">  # {e.comment}</span>}{'\n'}</>
+))}</pre>
+
+<style>
+  .yaml {
+    position: relative;
+    background: var(--paper);
+    border: var(--hairline);
+    padding: 22px 22px 18px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.9;
+    overflow-x: auto;
+  }
+  .yaml::before {
+    content: attr(data-file);
+    position: absolute;
+    top: -0.75em;
+    left: 14px;
+    background: var(--paper);
+    padding: 0 8px;
+    font-size: 0.68rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .k {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .v {
+    color: var(--accent);
+  }
+  .c {
+    color: var(--muted);
+  }
+</style>

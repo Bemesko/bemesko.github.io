@@ -1,0 +1,87 @@
+---
+import type { Project } from '../lib/projects';
+import { url } from '../lib/url';
+
+interface Props {
+  project: Project;
+}
+const { project } = Astro.props;
+const { title, summary, area, year, draft } = project.data;
+---
+
+<a class="row" href={url(`/projects/${project.id}/`)}>
+  <span class="mono">{area}</span>
+  <h3>
+    {title}
+    {draft && <span class="draft"> draft</span>}
+  </h3>
+  <p>{summary}</p>
+  <span class="meta mono">{year}</span>
+  <span class="arrow" aria-hidden="true">
+    →
+  </span>
+</a>
+
+<style>
+  .row {
+    display: grid;
+    grid-template-columns: 140px 1fr 1.1fr 48px 24px;
+    gap: 24px;
+    padding: 20px 0;
+    border-bottom: var(--hairline);
+    align-items: baseline;
+    text-decoration: none;
+    color: inherit;
+  }
+  h3 {
+    font-size: 1.15rem;
+  }
+  p {
+    font-size: 0.93rem;
+    color: var(--ink-soft);
+  }
+  .arrow {
+    color: var(--accent);
+    transition: transform 0.2s;
+  }
+  .row:hover .arrow {
+    transform: translateX(6px);
+  }
+  .row:hover h3 {
+    color: var(--accent);
+  }
+  .draft {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: #8a6d00;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  @media (max-width: 860px) {
+    .row {
+      grid-template-columns: 1fr auto;
+      gap: 6px 16px;
+    }
+    .row > .mono:first-child {
+      grid-column: 1 / -1;
+    }
+    h3 {
+      grid-column: 1;
+    }
+    .arrow {
+      grid-column: 2;
+      grid-row: 2;
+    }
+    p {
+      grid-column: 1 / -1;
+    }
+    .meta {
+      display: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .arrow {
+      transition: none;
+    }
+  }
+</style>

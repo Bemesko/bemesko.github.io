@@ -1,0 +1,80 @@
+---
+import Contours from './Contours.astro';
+
+interface Props {
+  id: string;
+  /** depth in metres, read by the gauge and shown in the section tag */
+  depth: number;
+  /** bathymetric band, 0 (shallow) to 3 (deep) */
+  band?: 0 | 1 | 2 | 3;
+  title?: string;
+  contours?: 'shoal' | 'slope' | 'basin' | 'trench';
+  soundings?: { x: number; y: number; v: string }[];
+  class?: string;
+}
+const { id, depth, band = 0, title, contours, soundings, class: className } = Astro.props;
+const headingId = title ? `${id}-title` : undefined;
+---
+
+<section
+  id={id}
+  class:list={['zone', `band-${band}`, className]}
+  data-depth={depth}
+  aria-labelledby={headingId}
+>
+  {contours && <Contours variant={contours} soundings={soundings} />}
+  <div class="zone-inner">
+    {title && (
+      <div class="depth-tag">
+        <b aria-hidden="true">{depth} m</b>
+        <h2 id={headingId}>{title}</h2>
+      </div>
+    )}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .zone {
+    position: relative;
+    padding: 88px var(--gutter);
+    overflow: hidden;
+  }
+  .zone-inner {
+    position: relative;
+    max-width: 1160px;
+  }
+  .band-0 {
+    background: var(--d0);
+  }
+  .band-1 {
+    background: var(--d1);
+  }
+  .band-2 {
+    background: var(--d2);
+  }
+  .band-3 {
+    background: var(--d3);
+  }
+  .depth-tag {
+    display: flex;
+    gap: 16px;
+    align-items: baseline;
+    margin-bottom: 32px;
+  }
+  .depth-tag b {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 1.5rem;
+    color: var(--accent-ink);
+    white-space: nowrap;
+  }
+  .depth-tag h2 {
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+  }
+  @media (max-width: 860px) {
+    .zone {
+      padding: 64px var(--gutter);
+    }
+  }
+</style>

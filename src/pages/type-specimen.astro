@@ -1,0 +1,200 @@
+---
+/**
+ * Temporary page to compare type pairings. Not indexed, not in the sitemap.
+ * Delete it once a pairing is chosen (see src/styles/fonts.css).
+ */
+import '../styles/fonts/editorial.css';
+import '../styles/fonts/chart.css';
+import '../styles/fonts/plex.css';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import YamlCard from '../components/YamlCard.astro';
+import { SITE } from '../site';
+
+const pairings = [
+  {
+    cls: 'type-editorial',
+    name: 'Sober editorial',
+    fonts: 'Newsreader · Inter · IBM Plex Mono',
+    note: 'Elegant serif headlines without the quirks of Fraunces, neutral sans for reading.',
+  },
+  {
+    cls: 'type-chart',
+    name: 'Technical chart',
+    fonts: 'Space Grotesk · Source Serif 4 · JetBrains Mono',
+    note: 'Engineering-flavoured headlines, bookish serif for body text.',
+  },
+  {
+    cls: 'type-plex',
+    name: 'All Plex',
+    fonts: 'IBM Plex Sans Condensed · IBM Plex Sans · IBM Plex Mono',
+    note: 'One family throughout, like the legend of a printed chart.',
+  },
+];
+---
+
+<BaseLayout title="Type specimen" noindex>
+  <section class="head">
+    <p class="mono">Internal · not indexed</p>
+    <h1>Type specimen</h1>
+    <p>
+      Three pairings applied to the same content. The active one is <code>{SITE.typePairing}</code>.
+      To switch, edit <code>src/styles/fonts.css</code> and <code>typePairing</code> in
+      <code>src/site.ts</code>.
+    </p>
+  </section>
+
+  {pairings.map((p, i) => (
+    <section class:list={['specimen', p.cls, `band-${i + 1}`]}>
+      <header class="spec-head">
+        <span class="mono">
+          {String(i + 1).padStart(2, '0')} · {p.name}
+          {p.cls === SITE.typePairing && ' · active'}
+        </span>
+        <span class="mono">{p.fonts}</span>
+      </header>
+      <div class="grid">
+        <div>
+          <p class="mono">
+            {SITE.name} · {SITE.role}
+          </p>
+          <h2 class="display">
+            I build platforms that keep the whole system in view,{' '}
+            <em>from the business problem down to the cluster.</em>
+          </h2>
+          <p class="lead">
+            I design delivery platforms, pipelines and AI architectures on Azure and Kubernetes. My
+            favourite work crosses layers: what the business needs, how the team builds it, and
+            where it all runs.
+          </p>
+          <p class="hand note">currently charting: context platforms for AI agents</p>
+        </div>
+        <div class="side">
+          <div class="row">
+            <span class="mono range">engineering</span>
+            <div>
+              <h3>Make shipping boring</h3>
+              <p>
+                Spec-driven and agent-assisted development, tests that mean something, and ephemeral
+                environments.
+              </p>
+            </div>
+          </div>
+          <YamlCard
+            filename="captain.yaml"
+            root="captain"
+            entries={[
+              { key: 'stack', value: ['azure', 'k8s', 'helm', 'github'] },
+              { key: 'status', value: 'open to conversations' },
+            ]}
+          />
+        </div>
+      </div>
+      <p class="mono pair-note">{p.note}</p>
+    </section>
+  ))}
+</BaseLayout>
+
+<style>
+  .head {
+    padding: 56px var(--gutter) 40px;
+    max-width: 760px;
+  }
+  .head h1 {
+    font-size: 2.4rem;
+    margin: 8px 0 12px;
+  }
+  .head code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+  }
+  .specimen {
+    padding: 48px var(--gutter) 40px;
+    border-top: var(--hairline);
+    font-family: var(--font-body);
+  }
+  .specimen :is(h2, h3) {
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    letter-spacing: var(--display-tracking);
+  }
+  .specimen .mono {
+    font-family: var(--font-mono);
+  }
+  .specimen .hand {
+    font-family: var(--font-hand);
+  }
+  .band-1 {
+    background: var(--d0);
+  }
+  .band-2 {
+    background: var(--d1);
+  }
+  .band-3 {
+    background: var(--d2);
+  }
+  .spec-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px;
+    padding-bottom: 14px;
+    margin-bottom: 32px;
+    border-bottom: 0.5px solid var(--line);
+  }
+  .spec-head .mono:first-child {
+    color: var(--accent-ink);
+    font-weight: 500;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .display {
+    margin-top: 14px;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    line-height: 1.06;
+  }
+  .display em {
+    color: var(--accent);
+  }
+  .lead {
+    margin-top: 18px;
+    max-width: 44ch;
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+  }
+  .note {
+    margin-top: 18px;
+    font-size: 1.15rem;
+  }
+  .side {
+    display: grid;
+    gap: 32px;
+  }
+  .row {
+    border-top: var(--hairline);
+    border-bottom: var(--hairline);
+    padding: 16px 0;
+  }
+  .row h3 {
+    font-size: 1.3rem;
+    margin-top: 4px;
+  }
+  .row p {
+    color: var(--ink-soft);
+    font-size: 0.97rem;
+  }
+  .range {
+    color: var(--accent-ink);
+  }
+  .pair-note {
+    margin-top: 28px;
+  }
+  @media (max-width: 860px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

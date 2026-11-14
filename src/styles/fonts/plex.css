@@ -1,0 +1,19 @@
+/* Pairing "All Plex": IBM Plex Sans Condensed + IBM Plex Sans + IBM Plex Mono */
+@import '@fontsource/ibm-plex-sans-condensed/400.css';
+@import '@fontsource/ibm-plex-sans-condensed/400-italic.css';
+@import '@fontsource/ibm-plex-sans-condensed/500.css';
+@import '@fontsource/ibm-plex-sans-condensed/600.css';
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/400-italic.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+
+.type-plex {
+  --font-display: 'IBM Plex Sans Condensed', system-ui, sans-serif;
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --font-hand: 'IBM Plex Sans Condensed', system-ui, sans-serif;
+  --display-weight: 500;
+  --display-tracking: -0.02em;
+}

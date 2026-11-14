@@ -1,0 +1,64 @@
+---
+interface Props {
+  star: { situation: string; task: string; action: string; result: string };
+}
+const { star } = Astro.props;
+const items = [
+  ['Situation', star.situation],
+  ['Task', star.task],
+  ['Action', star.action],
+  ['Result', star.result],
+] as const;
+---
+
+<dl class="star">
+  {items.map(([label, text]) => (
+    <div>
+      <dt>{label}</dt>
+      <dd class:list={{ todo: text.startsWith('TODO') }}>{text}</dd>
+    </div>
+  ))}
+</dl>
+
+<style>
+  .star {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin: 28px 0 0;
+    border-top: var(--hairline);
+    border-bottom: var(--hairline);
+  }
+  .star > div {
+    padding: 14px;
+    border-right: 0.5px dashed var(--line);
+    font-size: 0.9rem;
+  }
+  .star > div:last-child {
+    border-right: none;
+  }
+  dt {
+    font-family: var(--font-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    margin-bottom: 6px;
+  }
+  @media (max-width: 860px) {
+    .star {
+      grid-template-columns: 1fr 1fr;
+    }
+    .star > div:nth-child(2n) {
+      border-right: none;
+    }
+  }
+  @media (max-width: 480px) {
+    .star {
+      grid-template-columns: 1fr;
+    }
+    .star > div {
+      border-right: none;
+      border-bottom: 0.5px dashed var(--line);
+    }
+  }
+</style>

@@ -1,0 +1,133 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import DepthZone from '../../components/DepthZone.astro';
+import StarGrid from '../../components/StarGrid.astro';
+import ProjectRow from '../../components/ProjectRow.astro';
+import { getProjects, type Project } from '../../lib/projects';
+import { url } from '../../lib/url';
+
+export const getStaticPaths = (async () => {
+  const projects = await getProjects();
+  return projects.map((project) => ({
+    params: { slug: project.id },
+    props: { project, others: projects.filter((p) => p.id !== project.id).slice(0, 3) },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  project: Project;
+  others: Project[];
+}
+const { project, others } = Astro.props;
+const { data } = project;
+const { Content } = await render(project);
+---
+
+<BaseLayout title={data.title} description={data.summary} noindex={data.draft}>
+  <DepthZone id="brief" depth={0} band={0}>
+    <a class="back mono" href={url('/#work')}>
+      ← all work
+    </a>
+    {data.draft && <p class="todo draft-flag">Draft: only visible in dev, not published.</p>}
+    <h1>{data.title}</h1>
+    <p class="summary">{data.summary}</p>
+    {data.star && <StarGrid star={data.star} />}
+  </DepthZone>
+
+  <DepthZone id="story" depth={20} band={1} contours="shoal">
+    <div class="case">
+      <aside class="case-meta" aria-label="Project details">
+        <strong>{data.area}</strong>
+        <br />
+        Year · {data.year}
+        <br />
+        Role · {data.role}
+        {data.team && (
+          <>
+            <br />
+            Team · {data.team}
+          </>
+        )}
+        <br />
+        Stack · {data.stack.join(' · ').toLowerCase()}
+      </aside>
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </DepthZone>
+
+  {others.length > 0 && (
+    <DepthZone id="more" depth={40} band={2} title="More work" contours="slope">
+      <div class="list">
+        {others.map((p) => (
+          <ProjectRow project={p} />
+        ))}
+      </div>
+    </DepthZone>
+  )}
+</BaseLayout>
+
+<style>
+  .back {
+    display: inline-block;
+    margin-bottom: 28px;
+    text-decoration: none;
+    color: var(--accent-ink);
+  }
+  .draft-flag {
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-size: clamp(2rem, 4.2vw, 3.2rem);
+    line-height: 1.1;
+    max-width: 22ch;
+  }
+  .summary {
+    margin-top: 18px;
+    max-width: 52ch;
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+  }
+  .case {
+    display: grid;
+    grid-template-columns: 210px 1fr;
+    gap: 44px;
+  }
+  .case > * {
+    min-width: 0;
+  }
+  .case-meta {
+    position: sticky;
+    top: 24px;
+    border-left: 2px solid var(--accent);
+    padding-left: 16px;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    line-height: 1.95;
+    color: var(--muted);
+    align-self: start;
+  }
+  .case-meta strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .prose :global(h2:first-child) {
+    margin-top: 0;
+  }
+  .list {
+    border-top: var(--hairline);
+  }
+  @media (max-width: 860px) {
+    .case {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    .case-meta {
+      position: static;
+    }
+  }
+</style>

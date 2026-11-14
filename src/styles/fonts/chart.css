@@ -1,0 +1,16 @@
+/* Pairing "Technical chart": Space Grotesk + Source Serif 4 + JetBrains Mono */
+@import '@fontsource/space-grotesk/400.css';
+@import '@fontsource/space-grotesk/500.css';
+@import '@fontsource/space-grotesk/600.css';
+@import '@fontsource-variable/source-serif-4/wght.css';
+@import '@fontsource-variable/source-serif-4/wght-italic.css';
+@import '@fontsource-variable/jetbrains-mono/wght.css';
+
+.type-chart {
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Source Serif 4 Variable', Georgia, serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+  --font-hand: 'Source Serif 4 Variable', Georgia, serif;
+  --display-weight: 500;
+  --display-tracking: -0.03em;
+}

@@ -1,0 +1,151 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DepthZone from '../components/DepthZone.astro';
+import YamlCard from '../components/YamlCard.astro';
+import { LINKS, SITE } from '../site';
+
+const contact = [
+  { label: 'GitHub', href: LINKS.github },
+  { label: 'LinkedIn', href: LINKS.linkedin },
+  { label: 'Email', href: LINKS.email },
+].filter((c) => c.href);
+
+// TODO: replace with your real timeline
+const timeline = [
+  { when: 'TODO', what: 'Current role: platform, DevOps and AI architecture' },
+  { when: 'TODO', what: 'Previous role' },
+  { when: 'TODO', what: 'Where it started' },
+];
+---
+
+<BaseLayout title="About" description={`About ${SITE.name}, DevOps and platform engineer.`}>
+  <DepthZone id="about" depth={0} band={0}>
+    <div class="intro">
+      <div>
+        <p class="mono">About</p>
+        <h1>Hi, I'm Bernardo.</h1>
+        <div class="prose">
+          <p>
+            I'm a DevOps and platform engineer. I spend my days on Azure, Kubernetes and GitHub,
+            designing the platforms and pipelines that let teams ship, and lately a good part of
+            that is architecture for AI agents.
+          </p>
+          <p>
+            What I enjoy most is the space between layers: sitting with the business to understand
+            the problem, working with developers on how it gets built, and making sure the
+            infrastructure underneath is solid, secure and boring in the best way.
+          </p>
+          <p class="todo">
+            TODO: one or two sentences in your own voice (where you are, what you're looking for).
+          </p>
+        </div>
+      </div>
+      <YamlCard
+        filename="captain.yaml"
+        root="captain"
+        entries={[
+          { key: 'name', value: SITE.name },
+          { key: 'role', value: 'devops · platform · ai' },
+          { key: 'layers', value: ['product', 'dev', 'infra'] },
+          { key: 'stack', value: ['azure', 'k8s', 'helm', 'github'] },
+          { key: 'also_teaches', value: true, comment: 'workshops' },
+          { key: 'off_the_cluster', value: 'music' },
+          { key: 'status', value: 'open to conversations' },
+        ]}
+      />
+    </div>
+  </DepthZone>
+
+  <DepthZone id="path" depth={15} band={1} title="Path so far" contours="shoal">
+    <ol class="timeline">
+      {timeline.map((t) => (
+        <li>
+          <span class="mono when">{t.when}</span>
+          <span class:list={{ todo: t.when === 'TODO' }}>{t.what}</span>
+        </li>
+      ))}
+    </ol>
+  </DepthZone>
+
+  <DepthZone id="teaching" depth={30} band={2} title="Teaching" contours="slope">
+    <div class="prose">
+      <p>
+        I run hands-on AI workshops for business teams. The format is practical: short explanations,
+        checkpoints where everyone builds something, and live demos on real problems from their own
+        work.
+      </p>
+      <p class="todo">TODO: audiences, number of editions, a quote from a participant.</p>
+    </div>
+  </DepthZone>
+
+  <DepthZone id="off-the-cluster" depth={45} band={2} title="Off the cluster" contours="basin">
+    <div class="prose">
+      <p>Away from the terminal, I make music.</p>
+      <p class="todo">TODO: instrument, band or project, a link if you want to share it.</p>
+    </div>
+  </DepthZone>
+
+  <DepthZone id="reach" depth={60} band={3} title="Contact" contours="trench">
+    <ul class="contact-links">
+      {contact.map((c) => (
+        <li>
+          <a href={c.href} rel="me">
+            {c.label} <span aria-hidden="true">↗</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </DepthZone>
+</BaseLayout>
+
+<style>
+  .intro {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 56px;
+    align-items: start;
+    padding: 24px 0;
+  }
+  h1 {
+    margin: 14px 0 24px;
+    font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+  }
+  .timeline {
+    list-style: none;
+    border-top: var(--hairline);
+    max-width: 760px;
+  }
+  .timeline li {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: var(--hairline);
+  }
+  .when {
+    color: var(--accent-ink);
+    font-size: 0.8rem;
+    padding-top: 3px;
+  }
+  .contact-links {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 28px;
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+  }
+  .contact-links a {
+    color: var(--accent-ink);
+  }
+  @media (max-width: 860px) {
+    .intro {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .timeline li {
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+  }
+</style>

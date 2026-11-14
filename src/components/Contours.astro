@@ -1,0 +1,76 @@
+---
+/**
+ * Decorative contour lines and depth soundings, like a nautical chart.
+ * Purely visual: hidden from assistive tech.
+ */
+interface Props {
+  variant?: 'shoal' | 'slope' | 'basin' | 'trench';
+  soundings?: { x: number; y: number; v: string }[];
+}
+const { variant = 'slope', soundings = [] } = Astro.props;
+
+const paths: Record<string, string[]> = {
+  shoal: [
+    'M-20 300 C 200 240, 380 340, 560 280 S 880 230, 1020 290',
+    'M-20 330 C 210 270, 390 370, 570 310 S 880 260, 1020 320',
+    'M600 60 C 700 20, 860 40, 900 100 S 780 180, 680 150 S 560 90, 600 60Z',
+    'M640 80 C 710 55, 820 70, 850 105 S 770 150, 700 132 S 610 100, 640 80Z',
+  ],
+  slope: [
+    'M-20 80 C 180 30, 360 130, 540 70 S 860 40, 1020 90',
+    'M-20 110 C 190 60, 370 160, 550 100 S 860 70, 1020 120',
+    'M-20 140 C 200 90, 380 190, 560 130 S 860 100, 1020 150',
+  ],
+  basin: [
+    'M120 260 C 160 180, 320 160, 420 210 S 520 330, 380 350 S 90 340, 120 260Z',
+    'M170 262 C 200 210, 310 200, 370 230 S 430 310, 350 320 S 150 315, 170 262Z',
+    'M-20 60 C 260 20, 520 90, 760 40 S 980 30, 1020 50',
+  ],
+  trench: [
+    'M-20 40 C 220 90, 420 10, 640 60 S 900 120, 1020 70',
+    'M-20 360 C 240 320, 460 390, 700 340 S 940 300, 1020 330',
+    'M820 180 C 870 150, 950 170, 960 210 S 900 260, 850 240 S 790 205, 820 180Z',
+  ],
+};
+---
+
+<div class="contours" aria-hidden="true">
+  <svg viewBox="0 0 1000 400" preserveAspectRatio="none">
+    <g fill="none" stroke="var(--contour)" stroke-width="0.8">
+      {paths[variant].map((d) => (
+        <path d={d} vector-effect="non-scaling-stroke" />
+      ))}
+    </g>
+  </svg>
+  {soundings.map((s) => (
+    <span class="sounding" style={`left:${s.x}%;top:${s.y}%`}>
+      {s.v}
+    </span>
+  ))}
+</div>
+
+<style>
+  .contours {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+  svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .sounding {
+    position: absolute;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    font-style: italic;
+    color: var(--contour);
+  }
+  @media (max-width: 860px) {
+    .sounding {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,175 @@
+---
+/**
+ * Fixed depth gauge. Stops are computed in the browser from the real
+ * position of every [data-depth] section, so they always line up with the
+ * content. Pages without depth sections just show scroll progress.
+ * On narrow screens it collapses into a thin progress bar at the top.
+ */
+interface Props {
+  /** depth reached at the bottom of pages without [data-depth] sections */
+  max?: number;
+}
+const { max = 40 } = Astro.props;
+---
+
+<div class="gauge" data-max={max} aria-hidden="true">
+  <span class="label">DEPTH</span>
+  <div class="scale">
+    <div class="fill"></div>
+    <div class="stops"></div>
+  </div>
+  <span class="val">0 m</span>
+</div>
+
+<script>
+  function initGauge() {
+    const gauge = document.querySelector<HTMLElement>('.gauge');
+    if (!gauge) return;
+    const stopsEl = gauge.querySelector<HTMLElement>('.stops')!;
+    const val = gauge.querySelector<HTMLElement>('.val')!;
+    const max = Number(gauge.dataset.max) || 40;
+    let stops: { depth: number; frac: number; el: HTMLAnchorElement }[] = [];
+
+    const maxScroll = () => Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+
+    function layout() {
+      const sections = [...document.querySelectorAll<HTMLElement>('[data-depth]')];
+      const total = maxScroll();
+      stopsEl.replaceChildren();
+      stops = sections.map((s) => {
+        const top = s.getBoundingClientRect().top + window.scrollY;
+        const frac = Math.min(1, Math.max(0, top / total));
+        const el = document.createElement('a');
+        el.href = `#${s.id}`;
+        el.tabIndex = -1;
+        el.textContent = s.dataset.depth ?? '';
+        el.style.top = `${frac * 100}%`;
+        stopsEl.append(el);
+        return { depth: Number(s.dataset.depth), frac, el };
+      });
+      update();
+    }
+
+    function depthAt(p: number) {
+      if (stops.length === 0) return p * max;
+      if (p <= stops[0].frac) return stops[0].depth;
+      for (let i = 0; i < stops.length - 1; i++) {
+        const a = stops[i];
+        const b = stops[i + 1];
+        if (p <= b.frac) {
+          const t = b.frac === a.frac ? 1 : (p - a.frac) / (b.frac - a.frac);
+          return a.depth + (b.depth - a.depth) * t;
+        }
+      }
+      return stops[stops.length - 1].depth;
+    }
+
+    function update() {
+      const p = Math.min(1, Math.max(0, window.scrollY / maxScroll()));
+      gauge!.style.setProperty('--p', String(p));
+      val.textContent = `${Math.round(depthAt(p))} m`;
+      for (const s of stops) s.el.classList.toggle('on', p >= s.frac - 0.001);
+    }
+
+    let raf = 0;
+    const schedule = (fn: () => void) => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(fn);
+    };
+    window.addEventListener('scroll', () => schedule(update), { passive: true });
+    window.addEventListener('resize', () => schedule(layout));
+    document.fonts?.ready.then(layout);
+    layout();
+  }
+  initGauge();
+</script>
+
+<style>
+  .gauge {
+    --p: 0;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: var(--gauge-w);
+    border-right: var(--hairline);
+    background: var(--paper);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 0;
+  }
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+  .scale {
+    flex: 1;
+    width: 100%;
+    position: relative;
+    margin-top: 16px;
+    background:
+      repeating-linear-gradient(var(--ink) 0 1px, transparent 1px 12px) right / 10px 100% no-repeat,
+      repeating-linear-gradient(var(--ink) 0 1px, transparent 1px 60px) right / 20px 100% no-repeat;
+  }
+  .fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: calc(var(--p) * 100%);
+    background: var(--accent);
+  }
+  .stops {
+    position: absolute;
+    inset: 0;
+  }
+  .stops :global(a) {
+    position: absolute;
+    left: 10px;
+    transform: translateY(-50%);
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    text-decoration: none;
+    color: var(--muted);
+  }
+  .stops :global(a.on) {
+    color: var(--accent);
+  }
+  .val {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    margin-top: 12px;
+  }
+
+  @media (max-width: 860px) {
+    .gauge {
+      right: 0;
+      bottom: auto;
+      width: auto;
+      height: 3px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+    .label,
+    .val,
+    .stops {
+      display: none;
+    }
+    .scale {
+      margin: 0;
+      background: none;
+      height: 3px;
+    }
+    .fill {
+      height: 3px;
+      width: calc(var(--p) * 100%);
+    }
+  }
+</style>

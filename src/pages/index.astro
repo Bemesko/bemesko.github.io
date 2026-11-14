@@ -1,0 +1,365 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DepthZone from '../components/DepthZone.astro';
+import LayeredDiagram from '../components/LayeredDiagram.astro';
+import StarGrid from '../components/StarGrid.astro';
+import ProjectRow from '../components/ProjectRow.astro';
+import { getProjects } from '../lib/projects';
+import { diagrams } from '../data/diagrams';
+import { url } from '../lib/url';
+import { LINKS, SITE } from '../site';
+
+const projects = await getProjects();
+const featured = projects.find((p) => p.data.featured);
+const others = projects.filter((p) => p !== featured);
+const featuredDiagram = featured?.data.diagram ? diagrams[featured.data.diagram] : undefined;
+
+const layers = [
+  {
+    range: 'product',
+    title: 'Start from the problem',
+    text: 'I help shape scope, agree on what success looks like, and turn those metrics into technical decisions the team can act on.',
+  },
+  {
+    range: 'engineering',
+    title: 'Make shipping boring',
+    text: 'Spec-driven and agent-assisted development, tests that mean something, and ephemeral environments, so the team ships with confidence.',
+  },
+  {
+    range: 'infrastructure',
+    title: 'Build a foundation that holds',
+    text: 'Azure, Kubernetes, identity and security: the base everything above depends on, automated and observable.',
+  },
+];
+
+const contact = [
+  { label: 'GitHub', href: LINKS.github },
+  { label: 'LinkedIn', href: LINKS.linkedin },
+  { label: 'Email', href: LINKS.email },
+].filter((c) => c.href);
+---
+
+<BaseLayout>
+  <DepthZone id="surface" depth={0} band={0}>
+    <div class="hero">
+      <div>
+        <p class="mono">
+          {SITE.name} · {SITE.role}
+        </p>
+        <h1>
+          I build platforms that keep the whole system in view,{' '}
+          <em>from the business problem down to the cluster.</em>
+        </h1>
+        <p class="lead">
+          I design delivery platforms, pipelines and AI architectures on Azure and Kubernetes. My
+          favourite work crosses layers: what the business needs, how the team builds it, and where
+          it all runs.
+        </p>
+        <p class="hand note">currently charting: context platforms for AI agents</p>
+      </div>
+      <aside class="cartouche" aria-label="At a glance">
+        <p class="cartouche-title">Chart of a career</p>
+        <dl>
+          <div>
+            <dt>Focus</dt>
+            <dd>DevOps · Platform · AI</dd>
+          </div>
+          <div>
+            <dt>Waters</dt>
+            <dd>Azure · Kubernetes · GitHub</dd>
+          </div>
+          <div>
+            <dt>Also</dt>
+            <dd>Workshops · Music</dd>
+          </div>
+          <div>
+            <dt>Status</dt>
+            <dd>Open to conversations</dd>
+          </div>
+        </dl>
+        <p class="cartouche-scale mono">scale 1:1 · soundings in metres</p>
+      </aside>
+    </div>
+  </DepthZone>
+
+  <DepthZone
+    id="how"
+    depth={10}
+    band={1}
+    title="How I work"
+    contours="shoal"
+    soundings={[
+      { x: 70, y: 18, v: '8' },
+      { x: 82, y: 30, v: '11' },
+      { x: 91, y: 12, v: '9' },
+    ]}
+  >
+    <p class="intro">
+      Most problems cross more than one layer. I try to keep all three in view, and to explain each
+      one to the people working on the others.
+    </p>
+    <div class="profile">
+      {layers.map((l) => (
+        <div class="profile-row">
+          <span class="mono range">{l.range}</span>
+          <div>
+            <h3>{l.title}</h3>
+            <p>{l.text}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </DepthZone>
+
+  <DepthZone
+    id="work"
+    depth={30}
+    band={2}
+    title="Selected work"
+    contours="slope"
+    soundings={[
+      { x: 78, y: 4, v: '27' },
+      { x: 88, y: 9, v: '31' },
+    ]}
+  >
+    {featured && (
+      <article class="case">
+        <aside class="case-meta">
+          <strong>Case study</strong>
+          <br />
+          Year · {featured.data.year}
+          <br />
+          Role · {featured.data.role}
+          {featured.data.team && (
+            <>
+              <br />
+              Team · {featured.data.team}
+            </>
+          )}
+          <br />
+          Stack · {featured.data.stack.join(' · ').toLowerCase()}
+        </aside>
+        <div>
+          <h3>{featured.data.title}</h3>
+          <p>{featured.data.summary}</p>
+          {featuredDiagram && <LayeredDiagram id="fig-home" {...featuredDiagram} />}
+          {featured.data.star && <StarGrid star={featured.data.star} />}
+          <a class="read-more" href={url(`/projects/${featured.id}/`)}>
+            Read the case study <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </article>
+    )}
+    {others.length > 0 && (
+      <div class="list">
+        {others.map((p) => (
+          <ProjectRow project={p} />
+        ))}
+      </div>
+    )}
+  </DepthZone>
+
+  <DepthZone
+    id="contact"
+    depth={60}
+    band={3}
+    title="Get in touch"
+    contours="trench"
+    soundings={[
+      { x: 86, y: 44, v: '58' },
+      { x: 92, y: 56, v: '63' },
+    ]}
+  >
+    <div class="contact">
+      <p>
+        Building a platform, untangling a pipeline, or figuring out where AI actually fits? I'm
+        happy to talk it through. I also run hands-on AI workshops for business teams.
+      </p>
+      <ul class="contact-links">
+        {contact.map((c) => (
+          <li>
+            <a href={c.href} rel="me">
+              {c.label} <span aria-hidden="true">↗</span>
+            </a>
+          </li>
+        ))}
+        <li>
+          <a href={url('/about/')}>
+            More about me <span aria-hidden="true">→</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </DepthZone>
+</BaseLayout>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 56px;
+    align-items: center;
+    padding: 24px 0;
+  }
+  h1 {
+    margin-top: 18px;
+    font-size: clamp(2.3rem, 4.8vw, 3.9rem);
+    line-height: 1.06;
+  }
+  h1 em {
+    color: var(--accent);
+  }
+  .lead {
+    margin-top: 22px;
+    max-width: 44ch;
+    font-size: 1.12rem;
+    color: var(--ink-soft);
+  }
+  .note {
+    margin-top: 22px;
+    font-size: 1.15rem;
+    transform: rotate(-1.5deg);
+    transform-origin: left;
+  }
+
+  /* chart title block */
+  .cartouche {
+    border: 1px solid var(--ink);
+    outline: 0.5px solid var(--ink);
+    outline-offset: 4px;
+    padding: 22px 24px 16px;
+    background: var(--paper);
+    margin: 6px;
+  }
+  .cartouche-title {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.15rem;
+    text-align: center;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 0.5px solid var(--line);
+  }
+  .cartouche dl > div {
+    display: grid;
+    grid-template-columns: 76px 1fr;
+    gap: 12px;
+    padding: 6px 0;
+    font-size: 0.95rem;
+  }
+  .cartouche dt {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-top: 3px;
+  }
+  .cartouche-scale {
+    margin-top: 12px;
+    text-align: center;
+    font-size: 0.62rem;
+  }
+
+  .intro {
+    max-width: var(--measure);
+    font-size: 1.08rem;
+    margin-bottom: 32px;
+  }
+  .profile {
+    border-top: var(--hairline);
+  }
+  .profile-row {
+    display: grid;
+    grid-template-columns: 170px 1fr;
+    gap: 16px;
+    padding: 22px 0;
+    border-bottom: var(--hairline);
+  }
+  .range {
+    font-size: 0.8rem;
+    color: var(--accent-ink);
+    padding-top: 4px;
+  }
+  .profile-row h3 {
+    font-size: 1.3rem;
+  }
+  .profile-row p {
+    margin-top: 4px;
+    max-width: 60ch;
+    color: var(--ink-soft);
+  }
+
+  .case {
+    display: grid;
+    grid-template-columns: 210px 1fr;
+    gap: 44px;
+  }
+  .hero > *,
+  .case > * {
+    min-width: 0;
+  }
+  .case-meta {
+    border-left: 2px solid var(--accent);
+    padding-left: 16px;
+    font-family: var(--font-mono);
+    font-size: 0.76rem;
+    line-height: 1.95;
+    color: var(--muted);
+    align-self: start;
+  }
+  .case-meta strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .case h3 {
+    font-size: clamp(1.5rem, 2.6vw, 1.95rem);
+    line-height: 1.2;
+    margin-bottom: 14px;
+  }
+  .case p {
+    max-width: var(--measure);
+  }
+  .read-more {
+    display: inline-block;
+    margin-top: 24px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--accent-ink);
+  }
+  .list {
+    margin-top: 72px;
+    border-top: var(--hairline);
+  }
+
+  .contact {
+    max-width: var(--measure);
+  }
+  .contact p {
+    font-size: 1.1rem;
+  }
+  .contact-links {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 28px;
+    margin-top: 24px;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+  }
+  .contact-links a {
+    color: var(--accent-ink);
+  }
+
+  @media (max-width: 860px) {
+    .hero,
+    .case {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .profile-row {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+  }
+</style>

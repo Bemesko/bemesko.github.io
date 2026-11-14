@@ -1,0 +1,43 @@
+:root {
+  color-scheme: light;
+
+  /* chart palette: paper, ink and cobalt */
+  --paper: #f3efe4;
+  --ink: #14233a;
+  --ink-soft: #2b3a52;
+  --muted: #485466; /* ≥ 4.5:1 on every depth band */
+  --line: #c9c0a9;
+  --accent: #1f56a8;
+  --accent-ink: #1a4c96; /* accent for small text on the darker bands */
+  --code-bg: #14233a;
+  --code-fg: #e7edf6;
+  --code-comment: #8796ad;
+  --code-keyword: #ff8a5c;
+
+  /* bathymetric bands, shallow to deep */
+  --d0: #f3efe4;
+  --d1: #e6ebe6;
+  --d2: #d5e0e2;
+  --d3: #c3d3db;
+  --contour: #8fa6b0;
+
+  /* type fallbacks; the active pairing (fonts.css) overrides these */
+  --font-display: Georgia, serif;
+  --font-body: system-ui, sans-serif;
+  --font-mono: ui-monospace, monospace;
+  --font-hand: Georgia, serif;
+  --display-weight: 400;
+  --display-tracking: -0.015em;
+
+  /* layout */
+  --gauge-w: 72px;
+  --gutter: 48px;
+  --measure: 62ch;
+  --hairline: 0.5px solid var(--ink);
+}
+
+@media (max-width: 860px) {
+  :root {
+    --gutter: 20px;
+  }
+}

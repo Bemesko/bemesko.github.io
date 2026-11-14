@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DepthZone from '../components/DepthZone.astro';
+import { url } from '../lib/url';
+---
+
+<BaseLayout title="Uncharted waters" noindex>
+  <DepthZone
+    id="lost"
+    depth={404}
+    band={3}
+    contours="basin"
+    soundings={[
+      { x: 62, y: 30, v: '??' },
+      { x: 74, y: 52, v: '404' },
+      { x: 84, y: 38, v: '??' },
+    ]}
+  >
+    <div class="lost">
+      <p class="mono">Error 404 · position unknown</p>
+      <h1>Uncharted waters.</h1>
+      <p>This page isn't on the chart. It may have moved, or the link is off by a few degrees.</p>
+      <a href={url('/')}>
+        Back to the surface <span aria-hidden="true">↑</span>
+      </a>
+    </div>
+  </DepthZone>
+</BaseLayout>
+
+<style>
+  .lost {
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 18px;
+    max-width: 52ch;
+  }
+  h1 {
+    font-size: clamp(2.4rem, 5vw, 4rem);
+  }
+  a {
+    font-family: var(--font-mono);
+    color: var(--accent-ink);
+  }
+</style>

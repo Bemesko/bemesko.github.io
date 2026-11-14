@@ -1,0 +1,156 @@
+@import './tokens.css';
+@import './fonts.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+  padding: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: var(--display-weight);
+  letter-spacing: var(--display-tracking);
+  line-height: 1.15;
+}
+
+a {
+  color: inherit;
+  text-decoration-thickness: 0.5px;
+  text-underline-offset: 3px;
+}
+a:hover {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--paper);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+/* hand-annotation, like a pencil note on a chart */
+.hand {
+  font-family: var(--font-hand);
+  font-style: italic;
+  color: var(--accent);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 8px;
+  z-index: 50;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+.skip-link:focus {
+  left: calc(var(--gauge-w) + 8px);
+}
+
+/* prose (MDX case studies, about page) */
+.prose {
+  max-width: var(--measure);
+}
+.prose > * + * {
+  margin-top: 1em;
+}
+.prose h2 {
+  font-size: 1.6rem;
+  margin-top: 2.2em;
+}
+.prose h3 {
+  font-size: 1.25rem;
+  margin-top: 1.8em;
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.2em;
+}
+.prose li + li {
+  margin-top: 0.35em;
+}
+.prose code:not(pre code) {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+  padding: 0.1em 0.35em;
+}
+.prose pre {
+  padding: 18px 20px;
+  font-size: 0.82rem;
+  line-height: 1.8;
+  overflow-x: auto;
+  border: var(--hairline);
+}
+.prose pre code {
+  font-family: var(--font-mono);
+}
+.prose blockquote {
+  border-left: 2px solid var(--accent);
+  padding-left: 16px;
+  color: var(--ink-soft);
+}
+.prose .todo,
+.todo {
+  background: #fff3c4;
+  outline: 1px dashed #b08a00;
+  padding: 0 4px;
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+.prose figure,
+.prose .layered-diagram {
+  max-width: none;
+}
