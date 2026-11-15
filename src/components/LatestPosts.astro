@@ -1,0 +1,65 @@
+---
+/**
+ * Latest posts from Captain DevOps' Notes, read from src/data/posts.json.
+ * That file is refreshed at build time by scripts/fetch-posts.mjs.
+ */
+import posts from '../data/posts.json';
+
+interface Props {
+  limit?: number;
+}
+const { limit = 3 } = Astro.props;
+const latest = posts.slice(0, limit);
+const fmt = new Intl.DateTimeFormat('en', { day: 'numeric', month: 'short', year: 'numeric' });
+---
+
+{latest.length > 0 && (
+  <ol class="posts">
+    {latest.map((p) => (
+      <li>
+        <time class="mono" datetime={p.date}>
+          {fmt.format(new Date(p.date))}
+        </time>
+        <a href={p.url} target="_blank" rel="noopener">
+          {p.title} <span aria-hidden="true">↗</span>
+        </a>
+      </li>
+    ))}
+  </ol>
+)}
+
+<style>
+  .posts {
+    list-style: none;
+    border-top: var(--hairline);
+  }
+  .posts li {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 4px 16px;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: var(--hairline);
+  }
+  time {
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  a {
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    text-decoration: none;
+  }
+  a span {
+    font-size: 0.8em;
+    color: var(--accent-ink);
+  }
+  a:hover {
+    color: var(--accent-ink);
+  }
+  @media (max-width: 480px) {
+    .posts li {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

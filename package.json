@@ -7,6 +7,7 @@
     "dev": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
+    "posts": "node scripts/fetch-posts.mjs",
     "check": "astro check",
     "format": "prettier --write .",
     "astro": "astro"

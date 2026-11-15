@@ -10,9 +10,9 @@ export interface Book {
 const books: Book[] = [
   {
     title: 'Extreme Programming Explained',
-    authors: 'Kent Beck & Cynthia Andres',
-    year: 2004,
-    url: 'https://www.informit.com/store/extreme-programming-explained-embrace-change-9780321278654',
+    authors: 'Kent Beck',
+    year: 1999,
+    url: 'https://www.informit.com/store/extreme-programming-explained-embrace-change-9780201616415',
   },
   {
     title: 'The Phoenix Project',

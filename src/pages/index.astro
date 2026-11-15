@@ -4,6 +4,7 @@ import DepthZone from '../components/DepthZone.astro';
 import LayeredDiagram from '../components/LayeredDiagram.astro';
 import StarGrid from '../components/StarGrid.astro';
 import ProjectRow from '../components/ProjectRow.astro';
+import LatestPosts from '../components/LatestPosts.astro';
 import Portrait from '../components/Portrait.astro';
 import { getProjects } from '../lib/projects';
 import { diagrams } from '../data/diagrams';
@@ -236,6 +237,10 @@ const layers = [
           </a>
         </li>
       </ul>
+    </div>
+    <div class="notes">
+      <h3 class="notes-title">Latest from Captain DevOps' Notes</h3>
+      <LatestPosts limit={3} />
     </div>
   </DepthZone>
 </BaseLayout>
@@ -497,6 +502,14 @@ const layers = [
 
   .contact {
     max-width: var(--measure);
+  }
+  .notes {
+    margin-top: 56px;
+    max-width: 48rem;
+  }
+  .notes-title {
+    font-size: 1.15rem;
+    margin-bottom: 14px;
   }
   .contact p {
     font-size: 1.1rem;

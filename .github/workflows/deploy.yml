@@ -3,6 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # daily rebuild so new blog posts show up without a push
+  schedule:
+    - cron: '17 9 * * *'
   workflow_dispatch:
 
 permissions:
@@ -24,6 +27,9 @@ jobs:
       BASE_PATH: ${{ vars.BASE_PATH }}
     steps:
       - uses: actions/checkout@v7
+      # never fails the build: keeps the committed posts.json if the feed is unreachable
+      - name: Refresh latest blog posts
+        run: node scripts/fetch-posts.mjs
       - name: Type-check and build
         uses: withastro/action@v6
         with:

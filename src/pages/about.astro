@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import DepthZone from '../components/DepthZone.astro';
 import YamlCard from '../components/YamlCard.astro';
 import Portrait from '../components/Portrait.astro';
+import LatestPosts from '../components/LatestPosts.astro';
 import { CONTACT, LINKS, SITE } from '../site';
 import { BLOG_SINCE, certs, timeline } from '../data/career';
 
@@ -74,7 +75,6 @@ const talks = [
             { key: 'stack', value: ['kubernetes', 'terraform', 'argocd', 'opentelemetry'] },
             { key: 'certs', value: '8x microsoft certified' },
             { key: 'writes', value: `captain devops' notes (${BLOG_SINCE} – ongoing)` },
-            { key: 'off_the_cluster', value: ['speedcubing', 'homelab'] },
           ]}
         />
       </div>
@@ -142,6 +142,9 @@ const talks = [
           </h3>
           <p class="mono">Blog</p>
           <p>Where I write about what I'm learning on the job, so it outlives the project.</p>
+          <div class="latest">
+            <LatestPosts limit={3} />
+          </div>
         </div>
       </li>
     </ul>
@@ -224,6 +227,9 @@ const talks = [
   .talks p {
     color: var(--ink-soft);
     max-width: 64ch;
+  }
+  .latest {
+    margin-top: 14px;
   }
   .talks h3 a {
     text-decoration: none;

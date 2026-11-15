@@ -36,7 +36,15 @@ The site uses the "Technical chart" pairing (Space Grotesk + Source Serif 4 + Je
 
 ## Deploy
 
-Every push to `main` runs `.github/workflows/deploy.yml`, which type-checks, builds and publishes to GitHub Pages.
+Every push to `main` runs `.github/workflows/deploy.yml`, which refreshes the blog posts, type-checks, builds and publishes to GitHub Pages. It also runs daily so new posts show up without a push.
+
+### Scripts
+
+- `npm run posts` refreshes `src/data/posts.json` from the Substack feed: directly first, then through rss2json.com (Substack answers 403 to CI runners). If both fail it keeps the committed file. The list is also published at `/posts.json` for the GitHub profile README.
+- `python scripts/make-og.py . <work-dir> public/og.png` renders the social share card.
+- `python scripts/make-substack-kit.py <work-dir>` renders the Substack brand kit in `docs/brand/substack/`.
+
+The Python scripts need Pillow and fontTools with brotli, and read the fonts from `node_modules`.
 
 One-time setup: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 

@@ -157,7 +157,7 @@ export const toolbox: ToolGroup[] = [
       { name: 'Graylog', level: 'used' },
       { name: 'OpenSearch', level: 'used' },
       { name: 'Seq', level: 'used' },
-      { name: 'Mimir', level: 'used', note: 'homelab' },
+      { name: 'Mimir', level: 'used' },
     ],
   },
   {
