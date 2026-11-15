@@ -1,5 +1,7 @@
 ---
 import Contours from './Contours.astro';
+import Sightings from './Sightings.astro';
+import type { Sighting } from '../data/sightings';
 
 interface Props {
   id: string;
@@ -10,9 +12,20 @@ interface Props {
   title?: string;
   contours?: 'shoal' | 'slope' | 'basin' | 'trench';
   soundings?: { x: number; y: number; v: string }[];
+  /** tool engravings hidden on the chart, above the content */
+  sightings?: Sighting[];
   class?: string;
 }
-const { id, depth, band = 0, title, contours, soundings, class: className } = Astro.props;
+const {
+  id,
+  depth,
+  band = 0,
+  title,
+  contours,
+  soundings,
+  sightings,
+  class: className,
+} = Astro.props;
 const headingId = title ? `${id}-title` : undefined;
 ---
 
@@ -32,6 +45,7 @@ const headingId = title ? `${id}-title` : undefined;
     )}
     <slot />
   </div>
+  {sightings && sightings.length > 0 && <Sightings sightings={sightings} />}
 </section>
 
 <style>

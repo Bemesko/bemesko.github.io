@@ -2,12 +2,17 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import DepthZone from '../components/DepthZone.astro';
 import { LEVELS, toolbox, type Level, type Tool } from '../data/toolbox';
+import type { Sighting } from '../data/sightings';
 
 // a fixed 10 m per stage keeps the depth gauge on round numbers
 const DEPTH_STEP = 10;
 // spread the stages evenly over bands 1 to 3, shallow to deep
 const bandFor = (i: number) => (1 + Math.floor((i * 3) / toolbox.length)) as 1 | 2 | 3;
 const levelOrder: Level[] = ['preferred', 'regular', 'used'];
+// tool engravings tucked into the top margin of a few stages
+const sightingsFor: Record<string, Sighting[]> = {
+  ship: [{ fig: 'crate', x: 88, y: 2, size: 56, rotate: 4 }],
+};
 // project-only tools sit in a collapsed list under each stage
 const mainTools = (tools: Tool[]) => tools.filter((t) => t.level !== 'used');
 const projectTools = (tools: Tool[]) => tools.filter((t) => t.level === 'used');
@@ -52,6 +57,7 @@ const projectTools = (tools: Tool[]) => tools.filter((t) => t.level === 'used');
       band={bandFor(i)}
       title={g.title}
       contours={i % 2 === 0 ? 'shoal' : 'slope'}
+      sightings={sightingsFor[g.id]}
     >
       <p class="blurb">{g.blurb}</p>
       {mainTools(g.tools).length > 0 && (

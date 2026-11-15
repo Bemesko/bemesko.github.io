@@ -76,6 +76,10 @@ const nav = [
           {SITE.brand} · {SITE.name} · {new Date().getFullYear()}
         </span>
         <a href="#top">back to the surface ↑</a>
+        <p class="credits">
+          Chart engravings by Delapouite from <a href="https://game-icons.net/">game-icons.net</a>,
+          under <a href="https://creativecommons.org/licenses/by/3.0/">CC BY 3.0</a>, recoloured.
+        </p>
       </footer>
     </div>
   </body>
@@ -149,6 +153,15 @@ const nav = [
   }
   .site-footer a:hover {
     color: var(--on-ink-accent);
+  }
+  .credits {
+    flex-basis: 100%;
+    font-size: 0.68rem;
+    color: var(--on-ink-muted);
+  }
+  .credits a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
   @media (max-width: 860px) {
     .page {

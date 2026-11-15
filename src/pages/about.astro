@@ -115,7 +115,14 @@ const talks = [
     </div>
   </DepthZone>
 
-  <DepthZone id="talks" depth={30} band={2} title="Talks & writing" contours="slope">
+  <DepthZone
+    id="talks"
+    depth={30}
+    band={2}
+    title="Talks & writing"
+    contours="slope"
+    sightings={[{ fig: 'lighthouse', x: 82, y: 12, size: 64, rotate: -3 }]}
+  >
     <ul class="talks">
       {talks.map((t) => (
         <li>
@@ -140,7 +147,14 @@ const talks = [
     </ul>
   </DepthZone>
 
-  <DepthZone id="off-the-cluster" depth={45} band={2} title="Off the cluster" contours="basin">
+  <DepthZone
+    id="off-the-cluster"
+    depth={45}
+    band={2}
+    title="Off the cluster"
+    contours="basin"
+    sightings={[{ fig: 'mermaid', x: 82, y: 16, size: 72, rotate: 4 }]}
+  >
     <div class="prose">
       <p>
         I once got first place at a national <a href={LINKS.wca}>speedcubing</a> competition.
