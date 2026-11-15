@@ -52,11 +52,7 @@ const layers = [
         </p>
       </div>
       <aside class="cartouche" aria-label="At a glance">
-        <Portrait
-          class="glance-photo"
-          sizes="(max-width: 860px) 90vw, 400px"
-          loading="eager"
-        />
+        <Portrait class="glance-photo" sizes="(max-width: 860px) 90vw, 400px" loading="eager" />
         <p class="cartouche-title">At a glance</p>
         <dl>
           <div>
@@ -241,6 +237,8 @@ const layers = [
     padding: 22px 24px 16px;
     background: var(--paper);
     margin: 6px;
+    min-width: 0;
+    container-type: inline-size;
   }
   .cartouche :global(.glance-photo) {
     margin: -6px -8px 18px;
@@ -257,7 +255,7 @@ const layers = [
   }
   .cartouche dl > div {
     display: grid;
-    grid-template-columns: 92px 1fr;
+    grid-template-columns: 92px minmax(0, 1fr);
     gap: 12px;
     padding: 7px 0;
     font-size: 0.95rem;
@@ -265,12 +263,21 @@ const layers = [
   .roles {
     list-style: none;
     display: grid;
-    gap: 2px;
+    gap: 4px;
   }
   .roles li {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
-    gap: 12px;
+    align-items: baseline;
+    gap: 0 12px;
+  }
+  /* in a narrow box, put each label above its value instead of beside it */
+  @container (max-width: 380px) {
+    .cartouche dl > div {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 4px;
+    }
   }
   .yrs {
     font-size: 0.75rem;
