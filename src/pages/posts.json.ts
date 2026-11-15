@@ -4,6 +4,6 @@ import type { APIRoute } from 'astro';
 import posts from '../data/posts.json';
 
 export const GET: APIRoute = () =>
-  new Response(JSON.stringify(posts.map(({ title, url, date }) => ({ title, url, date }))), {
+  new Response(JSON.stringify(posts), {
     headers: { 'Content-Type': 'application/json' },
   });

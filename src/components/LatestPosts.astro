@@ -17,12 +17,18 @@ const fmt = new Intl.DateTimeFormat('en', { day: 'numeric', month: 'short', year
   <ol class="posts">
     {latest.map((p) => (
       <li>
-        <time class="mono" datetime={p.date}>
-          {fmt.format(new Date(p.date))}
-        </time>
-        <a href={p.url} target="_blank" rel="noopener">
+        <p class="meta mono">
+          <time datetime={p.date}>{fmt.format(new Date(p.date))}</time>
+          <span aria-hidden="true">·</span>
+          <span>{p.minutes} min read</span>
+        </p>
+        <a href={p.url} target="_blank" rel="noopener" class="title">
           {p.title} <span aria-hidden="true">↗</span>
         </a>
+        <p class="excerpt">
+          {p.subtitle && <em>{p.subtitle.replace(/\.?$/, '.')} </em>}
+          {p.excerpt}
+        </p>
       </li>
     ))}
   </ol>
@@ -35,31 +41,35 @@ const fmt = new Intl.DateTimeFormat('en', { day: 'numeric', month: 'short', year
   }
   .posts li {
     display: grid;
-    grid-template-columns: 7.5rem minmax(0, 1fr);
-    gap: 4px 16px;
-    align-items: baseline;
-    padding: 10px 0;
+    gap: 4px;
+    padding: 14px 0;
     border-bottom: var(--hairline);
   }
-  time {
+  .meta {
+    display: flex;
+    gap: 8px;
     font-size: 0.72rem;
     color: var(--muted);
   }
-  a {
+  .title {
     font-family: var(--font-display);
     font-weight: var(--display-weight);
+    font-size: 1.08rem;
     text-decoration: none;
   }
-  a span {
+  .title span {
     font-size: 0.8em;
     color: var(--accent-ink);
   }
-  a:hover {
+  .title:hover {
     color: var(--accent-ink);
   }
-  @media (max-width: 480px) {
-    .posts li {
-      grid-template-columns: minmax(0, 1fr);
-    }
+  .excerpt {
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    max-width: var(--measure);
+  }
+  .excerpt em {
+    color: var(--ink);
   }
 </style>

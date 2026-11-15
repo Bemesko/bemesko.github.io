@@ -3,30 +3,40 @@
     "title": "Seniority is having opinions",
     "url": "https://captaindevops.substack.com/p/seniority-is-having-opinions",
     "date": "2026-11-14T12:37:27.000Z",
-    "excerpt": "The title of this post is one of my latest conclusions considering how our relationship to work has changed after agentic development became widespread."
+    "subtitle": "",
+    "excerpt": "The title of this post is one of my latest conclusions considering how our relationship to work has changed after agentic development became widespread. There are a few…",
+    "minutes": 2
   },
   {
     "title": "Align mental models first",
     "url": "https://captaindevops.substack.com/p/align-mental-models-first",
     "date": "2026-11-12T12:30:44.000Z",
-    "excerpt": "Or suffer the consequences"
+    "subtitle": "Or suffer the consequences",
+    "excerpt": "As I write this, yesterday I’ve had my first experience conducting a guided usability test with a real customer. Let me tell you how it got to it. There’s a specific…",
+    "minutes": 2
   },
   {
     "title": "Some thoughts about AdonisJS",
     "url": "https://captaindevops.substack.com/p/some-thoughts-about-adonisjs",
     "date": "2026-11-10T12:37:47.000Z",
-    "excerpt": "Albeit not deeply-informed ones."
+    "subtitle": "Albeit not deeply-informed ones.",
+    "excerpt": "AdonisJS is a really interesting typescript framework. I’m not too well-versed in web development frameworks, but I thought this would be a good moment to put on the…",
+    "minutes": 2
   },
   {
     "title": "Data Gateways and AI Agent trickery",
     "url": "https://captaindevops.substack.com/p/data-gateways-and-ai-agent-trickery",
     "date": "2026-11-08T12:30:44.000Z",
-    "excerpt": "Today&#8217;s post is more about system design."
+    "subtitle": "",
+    "excerpt": "Today’s post is more about system design. I also wanted to make a record of some of the architecture decisions I’m making with a specific project I’m helping with at…",
+    "minutes": 2
   },
   {
     "title": "Consumers Need Context",
     "url": "https://captaindevops.substack.com/p/consumers-need-context",
     "date": "2026-11-06T12:33:32.000Z",
-    "excerpt": "More thoughts on post-AI infra as code and platform consumers."
+    "subtitle": "More thoughts on post-AI infra as code and platform consumers.",
+    "excerpt": "This thought is a bit of a continuation for what I wrote last time. After finishing my last post I was still wondering about the subject of what has changed on my team’s…",
+    "minutes": 2
   }
 ]
