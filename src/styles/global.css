@@ -100,7 +100,8 @@ svg {
 }
 
 /* prose (MDX case studies, about page) */
-.prose {
+/* the measure caps text, not the container, so figures can use the full column */
+.prose > * {
   max-width: var(--measure);
 }
 .prose > * + * {
@@ -150,7 +151,7 @@ svg {
   font-family: var(--font-mono);
   font-size: 0.85em;
 }
-.prose figure,
-.prose .layered-diagram {
+.prose > figure,
+.prose > .layered-diagram {
   max-width: none;
 }

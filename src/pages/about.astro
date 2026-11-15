@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import DepthZone from '../components/DepthZone.astro';
 import YamlCard from '../components/YamlCard.astro';
+import Portrait from '../components/Portrait.astro';
 import { CONTACT, LINKS, SITE } from '../site';
 import { BLOG_SINCE, certs, timeline } from '../data/career';
 
@@ -56,20 +57,27 @@ const talks = [
           </p>
         </div>
       </div>
-      <YamlCard
-        filename="captain.yaml"
-        root="captain"
-        entries={[
-          { key: 'name', value: SITE.name },
-          { key: 'role', value: 'platform engineer' },
-          { key: 'based', value: 'brazil (utc-3) · remote' },
-          { key: 'clouds', value: ['azure', 'aws'] },
-          { key: 'stack', value: ['kubernetes', 'terraform', 'argocd', 'opentelemetry'] },
-          { key: 'certs', value: '8x microsoft certified' },
-          { key: 'writes', value: `captain devops' notes (${BLOG_SINCE} – ongoing)` },
-          { key: 'off_the_cluster', value: ['speedcubing', 'homelab'] },
-        ]}
-      />
+      <div class="side">
+        <Portrait
+          sizes="(max-width: 860px) 90vw, (max-width: 1200px) 280px, 480px"
+          loading="eager"
+          caption="fig. 1 · at the helm"
+        />
+        <YamlCard
+          filename="captain.yaml"
+          root="captain"
+          entries={[
+            { key: 'name', value: SITE.name },
+            { key: 'role', value: 'platform engineer' },
+            { key: 'based', value: 'brazil (utc-3) · remote' },
+            { key: 'clouds', value: ['azure', 'aws'] },
+            { key: 'stack', value: ['kubernetes', 'terraform', 'argocd', 'opentelemetry'] },
+            { key: 'certs', value: '8x microsoft certified' },
+            { key: 'writes', value: `captain devops' notes (${BLOG_SINCE} – ongoing)` },
+            { key: 'off_the_cluster', value: ['speedcubing', 'homelab'] },
+          ]}
+        />
+      </div>
     </div>
   </DepthZone>
 
@@ -171,14 +179,29 @@ const talks = [
     align-items: start;
     padding: 24px 0;
   }
+  .side {
+    display: grid;
+    gap: 36px;
+    min-width: 0;
+  }
   /* below this width the text column gets too narrow next to the card */
   @media (max-width: 1200px) {
     .intro {
       grid-template-columns: minmax(0, 1fr);
       gap: 40px;
     }
-    .intro :global(.yaml-card) {
-      max-width: 640px;
+    .side {
+      grid-template-columns: 280px minmax(0, 1fr);
+      align-items: start;
+      gap: 32px;
+    }
+  }
+  @media (max-width: 860px) {
+    .side {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .side :global(.portrait) {
+      max-width: 340px;
     }
   }
   .intro > * {

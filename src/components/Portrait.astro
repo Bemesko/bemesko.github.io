@@ -1,0 +1,60 @@
+---
+/**
+ * Bernardo's duotone portrait at the helm. The source is a 4:5 crop already
+ * toned navy-to-paper; `aspect` re-crops it in CSS, keeping the face in view.
+ */
+import { Image } from 'astro:assets';
+import photo from '../assets/captain-helm.jpg';
+
+interface Props {
+  /** CSS aspect-ratio of the frame, e.g. "1 / 1" or "4 / 5" */
+  aspect?: string;
+  /** vertical focus for object-position when the frame is wider than the 4:5 source */
+  focusY?: string;
+  /** rendered width hint for responsive images */
+  sizes: string;
+  caption?: string;
+  loading?: 'eager' | 'lazy';
+  class?: string;
+}
+const {
+  aspect = '1 / 1',
+  focusY = '15%',
+  sizes,
+  caption,
+  loading = 'lazy',
+  class: className,
+} = Astro.props;
+---
+
+<figure class:list={['portrait', className]} style={`--aspect: ${aspect}; --focus-y: ${focusY}`}>
+  <Image
+    src={photo}
+    alt="Bernardo at the helm of a docked boat, shading his eyes and looking out ahead."
+    widths={[360, 540, 720]}
+    sizes={sizes}
+    loading={loading}
+  />
+  {caption && <figcaption class="mono">{caption}</figcaption>}
+</figure>
+
+<style>
+  .portrait {
+    margin: 0;
+  }
+  .portrait :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: var(--aspect);
+    object-fit: cover;
+    object-position: 50% var(--focus-y);
+    border: 1px solid var(--ink);
+  }
+  figcaption {
+    margin-top: 8px;
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+</style>

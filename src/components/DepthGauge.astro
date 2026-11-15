@@ -129,6 +129,8 @@ const { max = 45 } = Astro.props;
     };
     window.addEventListener('scroll', () => schedule(update), { passive: true });
     window.addEventListener('resize', () => schedule(layout));
+    // content can change height without a resize (e.g. opening a <details>)
+    new ResizeObserver(() => schedule(layout)).observe(document.body);
     document.fonts?.ready.then(layout);
     layout();
   }

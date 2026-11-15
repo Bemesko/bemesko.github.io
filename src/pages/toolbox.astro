@@ -1,11 +1,16 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import DepthZone from '../components/DepthZone.astro';
-import { LEVELS, toolbox, type Level } from '../data/toolbox';
+import { LEVELS, toolbox, type Level, type Tool } from '../data/toolbox';
 
-const bands = [1, 1, 2, 2, 3, 3] as const;
-const depthStep = 60 / Math.max(1, toolbox.length);
+// a fixed 10 m per stage keeps the depth gauge on round numbers
+const DEPTH_STEP = 10;
+// spread the stages evenly over bands 1 to 3, shallow to deep
+const bandFor = (i: number) => (1 + Math.floor((i * 3) / toolbox.length)) as 1 | 2 | 3;
 const levelOrder: Level[] = ['preferred', 'regular', 'used'];
+// project-only tools sit in a collapsed list under each stage
+const mainTools = (tools: Tool[]) => tools.filter((t) => t.level !== 'used');
+const projectTools = (tools: Tool[]) => tools.filter((t) => t.level === 'used');
 ---
 
 <BaseLayout
@@ -19,8 +24,9 @@ const levelOrder: Level[] = ['preferred', 'regular', 'used'];
         <h1>What's on board.</h1>
         <p class="lead">
           Everything I know well enough to start working with right away, grouped by where it fits
-          in delivery: code, provision, ship, run, observe, secure. The filled marks are my default
-          picks.
+          in delivery: code, provision, ship, run, store, observe, secure, docs. The filled marks
+          are my default picks; tools I've only used on specific projects are folded under each
+          stage.
         </p>
       </div>
       <aside class="legend" aria-label="Legend">
@@ -42,24 +48,45 @@ const levelOrder: Level[] = ['preferred', 'regular', 'used'];
   {toolbox.map((g, i) => (
     <DepthZone
       id={g.id}
-      depth={Math.round((i + 1) * depthStep)}
-      band={bands[i % bands.length]}
+      depth={(i + 1) * DEPTH_STEP}
+      band={bandFor(i)}
       title={g.title}
       contours={i % 2 === 0 ? 'shoal' : 'slope'}
     >
       <p class="blurb">{g.blurb}</p>
-      <ul class="tools">
-        {g.tools.map((t) => (
-          <li class={t.level}>
-            <span class:list={['mark', t.level]} aria-hidden="true">
-              {LEVELS[t.level].mark}
-            </span>
-            <span class="name">{t.name}</span>
-            <span class="visually-hidden">({LEVELS[t.level].label})</span>
-            {t.note && <span class="note mono">{t.note}</span>}
-          </li>
-        ))}
-      </ul>
+      {mainTools(g.tools).length > 0 && (
+        <ul class="tools">
+          {mainTools(g.tools).map((t) => (
+            <li class={t.level}>
+              <span class:list={['mark', t.level]} aria-hidden="true">
+                {LEVELS[t.level].mark}
+              </span>
+              <span class="name">{t.name}</span>
+              <span class="visually-hidden">({LEVELS[t.level].label})</span>
+              {t.note && <span class="note mono">{t.note}</span>}
+            </li>
+          ))}
+        </ul>
+      )}
+      {projectTools(g.tools).length > 0 && (
+        <details class="more">
+          <summary class="mono">
+            <span class="count">{projectTools(g.tools).length}</span> more {LEVELS.used.label}
+          </summary>
+          <ul class="tools">
+            {projectTools(g.tools).map((t) => (
+              <li class={t.level}>
+                <span class:list={['mark', t.level]} aria-hidden="true">
+                  {LEVELS[t.level].mark}
+                </span>
+                <span class="name">{t.name}</span>
+                <span class="visually-hidden">({LEVELS[t.level].label})</span>
+                {t.note && <span class="note mono">{t.note}</span>}
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
     </DepthZone>
   ))}
 </BaseLayout>
@@ -118,15 +145,51 @@ const levelOrder: Level[] = ['preferred', 'regular', 'used'];
     border-top: var(--hairline);
     border-left: var(--hairline);
   }
+  /* mark in its own column, so long names wrap beside it instead of under it */
   .tools li {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 12px minmax(0, 1fr);
     align-items: baseline;
+    align-content: start;
     gap: 4px 10px;
     padding: 14px 16px;
     border-right: var(--hairline);
     border-bottom: var(--hairline);
     background: color-mix(in srgb, var(--paper) 55%, transparent);
+  }
+  .more {
+    margin-top: 14px;
+  }
+  .tools + .more {
+    margin-top: 18px;
+  }
+  .more summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    list-style: none;
+    font-size: 0.78rem;
+    color: var(--accent-ink);
+    padding: 6px 0;
+  }
+  .more summary::-webkit-details-marker {
+    display: none;
+  }
+  .more summary::before {
+    content: '+';
+    display: inline-block;
+    width: 1ch;
+    font-weight: 700;
+  }
+  .more[open] summary::before {
+    content: '−';
+  }
+  .more summary:hover {
+    text-decoration: underline;
+  }
+  .more .tools {
+    margin-top: 10px;
   }
   .tools li.preferred {
     background: var(--paper);
@@ -159,8 +222,7 @@ const levelOrder: Level[] = ['preferred', 'regular', 'used'];
     font-weight: 600;
   }
   .note {
-    flex-basis: 100%;
-    padding-left: 22px;
+    grid-column: 2;
     font-size: 0.7rem;
   }
   @media (max-width: 860px) {

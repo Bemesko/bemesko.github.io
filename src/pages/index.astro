@@ -4,6 +4,7 @@ import DepthZone from '../components/DepthZone.astro';
 import LayeredDiagram from '../components/LayeredDiagram.astro';
 import StarGrid from '../components/StarGrid.astro';
 import ProjectRow from '../components/ProjectRow.astro';
+import Portrait from '../components/Portrait.astro';
 import { getProjects } from '../lib/projects';
 import { diagrams } from '../data/diagrams';
 import { url } from '../lib/url';
@@ -51,6 +52,11 @@ const layers = [
         </p>
       </div>
       <aside class="cartouche" aria-label="At a glance">
+        <Portrait
+          class="glance-photo"
+          sizes="(max-width: 860px) 90vw, 400px"
+          loading="eager"
+        />
         <p class="cartouche-title">At a glance</p>
         <dl>
           <div>
@@ -235,6 +241,9 @@ const layers = [
     padding: 22px 24px 16px;
     background: var(--paper);
     margin: 6px;
+  }
+  .cartouche :global(.glance-photo) {
+    margin: -6px -8px 18px;
   }
   .cartouche-title {
     font-family: var(--font-mono);
