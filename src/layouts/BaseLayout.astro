@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import DepthGauge from '../components/DepthGauge.astro';
-import { LINKS, SITE } from '../site';
+import { CONTACT, LINKS, SITE } from '../site';
 import { url } from '../lib/url';
 
 interface Props {
@@ -96,6 +96,17 @@ const nav = [
         <span>
           {SITE.brand} · {SITE.name} · {new Date().getFullYear()}
         </span>
+        <nav aria-label="Contact">
+          <ul class="footer-contact">
+            {CONTACT.map((c) => (
+              <li>
+                <a href={c.href} rel={c.href.startsWith('mailto:') ? undefined : 'me'}>
+                  {c.label.split(' · ')[0]} <span aria-hidden="true">↗</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
         <a href="#top">back to the surface ↑</a>
         <p class="credits">
           Chart engravings by Delapouite from <a href="https://game-icons.net/">game-icons.net</a>,
@@ -175,6 +186,15 @@ const nav = [
     text-decoration: none;
   }
   .site-footer a:hover {
+    color: var(--on-ink-accent);
+  }
+  .footer-contact {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 22px;
+  }
+  .footer-contact span {
     color: var(--on-ink-accent);
   }
   .credits {
