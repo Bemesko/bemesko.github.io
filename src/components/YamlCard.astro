@@ -16,18 +16,11 @@ const { filename, root, entries } = Astro.props;
 
 <div class="yaml-card">
   <span class="file">{filename}</span>
-  <pre class="yaml"><span class="k">{root}</span>:
-{entries.map((e) => (
-  <>{'  '}<span class="k">{e.key}</span>: {Array.isArray(e.value) ? (
-    <>[{e.value.map((v, i) => <>{i > 0 && ', '}<span class="v">{v}</span></>)}]</>
-  ) : (
-    <span class="v">{String(e.value)}</span>
-  )}{e.comment && <span class="c">  # {e.comment}</span>}{'\n'}</>
-))}</pre>
+  <pre class="yaml"><span class="line root"><span class="k">{root}</span>:</span>{entries.map((e) => (<span class="line"><span class="k">{e.key}</span>: {Array.isArray(e.value) ? (<>[{e.value.map((v, i) => <>{i > 0 && ', '}<span class="v">{v}</span></>)}]</>) : (<span class="v">{String(e.value)}</span>)}{e.comment && <span class="c">  # {e.comment}</span>}</span>))}</pre>
 </div>
 
 <style>
-  /* the label sits on the border, so overflow scrolling lives on the inner <pre> */
+  /* the label sits on the border, so the card itself must not clip */
   .yaml-card {
     position: relative;
     margin-top: 0.75em;
@@ -51,7 +44,18 @@ const { filename, root, entries } = Astro.props;
     font-family: var(--font-mono);
     font-size: 0.8rem;
     line-height: 1.9;
-    overflow-x: auto;
+    /* long lines wrap with a hanging indent instead of scrolling */
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .line {
+    display: block;
+    padding-left: 4ch;
+    text-indent: -2ch;
+  }
+  .line.root {
+    padding-left: 0;
+    text-indent: 0;
   }
   .k {
     color: var(--ink);

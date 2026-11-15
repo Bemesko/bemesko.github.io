@@ -181,6 +181,8 @@ const talks = [
   }
   .side {
     display: grid;
+    /* without an explicit track the column grows to the longest YAML line */
+    grid-template-columns: minmax(0, 1fr);
     gap: 36px;
     min-width: 0;
   }
