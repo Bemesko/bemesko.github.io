@@ -36,6 +36,8 @@
   /* layout */
   --gauge-w: 72px;
   --gutter: 48px;
+  /* content column; wide enough that large screens keep only the gutter as margin */
+  --content-max: 1680px;
   /* fixed site header height, so the home hero can fill the rest of the screen */
   --header-h: 72px;
   --measure: 62ch;

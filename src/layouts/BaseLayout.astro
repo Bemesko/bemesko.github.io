@@ -102,7 +102,7 @@ const nav = [
     gap: 16px;
     /* exact height on desktop: the home hero sizes itself against it */
     min-height: var(--header-h);
-    padding: 12px var(--gutter);
+    padding: 12px max(var(--gutter), calc((100% - var(--content-max)) / 2));
     background: var(--ink);
     color: var(--on-ink);
     font-family: var(--font-mono);
@@ -140,7 +140,7 @@ const nav = [
     text-decoration: underline;
   }
   .site-footer {
-    padding: 32px var(--gutter);
+    padding: 32px max(var(--gutter), calc((100% - var(--content-max)) / 2));
     background: var(--ink);
     color: var(--on-ink);
     display: flex;

@@ -17,6 +17,11 @@
   }
 }
 
+/* type grows on large screens (16px at 1280x720, ~18px at 1920x1080, 20px max);
+   it follows the shorter side, so wide but short laptops stay at 16px */
+html {
+  font-size: clamp(100%, min(0.5vw, 0.9vh) + 0.6rem, 125%);
+}
 body {
   background: var(--paper);
   color: var(--ink);
