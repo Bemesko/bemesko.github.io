@@ -2,7 +2,7 @@
   color-scheme: light;
 
   /* chart palette: paper, ink and cobalt */
-  --paper: #f3efe4;
+  --paper: #f1eadb;
   --ink: #14233a;
   --ink-soft: #2b3a52;
   --muted: #485466; /* ≥ 4.5:1 on every depth band */
@@ -10,7 +10,7 @@
   --accent: #1f56a8;
   --accent-ink: #1a4c96; /* accent for small text on the darker bands */
   /* text on the navy header/footer */
-  --on-ink: #f3efe4;
+  --on-ink: #f1eadb;
   --on-ink-muted: #c6cfdc;
   --on-ink-accent: #9dbcf0;
   --code-bg: #14233a;
@@ -19,7 +19,7 @@
   --code-keyword: #ff8a5c;
 
   /* bathymetric bands, shallow to deep */
-  --d0: #f3efe4;
+  --d0: #f1eadb;
   --d1: #e6ebe6;
   --d2: #d5e0e2;
   --d3: #c3d3db;

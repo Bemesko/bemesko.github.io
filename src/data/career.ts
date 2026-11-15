@@ -39,10 +39,10 @@ export const certs = [
   'DevOps Engineer Expert (AZ-400)',
   'Azure Administrator Associate (AZ-104)',
   'Azure Developer Associate (AZ-204)',
+  'GitHub Administration (GH-100)',
   'Azure AI Engineer Associate (AI-102)',
   'Fabric Analytics Engineer Associate (DP-600)',
   'Fabric Data Engineer Associate (DP-700)',
-  'GitHub Administration',
   'Azure Fundamentals (AZ-900)',
 ];
 

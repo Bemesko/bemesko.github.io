@@ -10,6 +10,7 @@ import { diagrams } from '../data/diagrams';
 import { url } from '../lib/url';
 import { CONTACT, SITE } from '../site';
 import { certs, timeline } from '../data/career';
+import { BOOKS } from '../data/books';
 
 const projects = await getProjects();
 const featured = projects.find((p) => p.data.featured);
@@ -43,12 +44,14 @@ const layers = [
           {SITE.name} · {SITE.role}
         </p>
         <h1>
-          Five years building platforms <em>for hospitals, steel plants and consultancies.</em>
+          I build the boring parts of shipping software,{' '}
+          <em>so teams can spend their time on the fun ones.</em>
         </h1>
         <p class="lead">
-          I'm a platform engineer from Brazil. I build golden paths on Kubernetes, Terraform and
-          Azure, ship them through GitOps with observability built in, and lately set up the
-          least-privilege access, budgets and telemetry that AI agents need in production.
+          I'm a DevOps and Platform Engineer from Brazil. I use tools and practices like Kubernetes,
+          GitOps, infrastructure as code and agentic development to make working on a development
+          team a joy. I believe great products can only be built by teams that feel in control and
+          are satisfied with their work, so I do my best to help them get there.
         </p>
       </div>
       <aside class="cartouche" aria-label="At a glance">
@@ -91,48 +94,16 @@ const layers = [
   </DepthZone>
 
   <DepthZone
-    id="how"
+    id="work"
     depth={10}
     band={1}
-    title="How I work"
+    title="Selected work"
     contours="shoal"
-    sightings={[
-      { fig: 'wheel', x: 72, y: 3, size: 60, rotate: 12 },
-      { fig: 'telescope', x: 86, y: 5, size: 64, rotate: 6 },
-    ]}
+    sightings={[{ fig: 'whale', x: 82, y: 1.5, size: 96 }]}
     soundings={[
       { x: 70, y: 18, v: '8' },
       { x: 82, y: 30, v: '11' },
       { x: 91, y: 12, v: '9' },
-    ]}
-  >
-    <p class="intro">
-      Most problems cross more than one layer. I try to keep all three in view, and to make each one
-      make sense to the people working on the others.
-    </p>
-    <div class="profile">
-      {layers.map((l) => (
-        <div class="profile-row">
-          <span class="mono range">{l.range}</span>
-          <div>
-            <h3>{l.title}</h3>
-            <p>{l.text}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  </DepthZone>
-
-  <DepthZone
-    id="work"
-    depth={30}
-    band={2}
-    title="Selected work"
-    contours="slope"
-    sightings={[{ fig: 'whale', x: 82, y: 1.5, size: 96 }]}
-    soundings={[
-      { x: 78, y: 4, v: '27' },
-      { x: 88, y: 9, v: '31' },
     ]}
   >
     {featured && (
@@ -176,6 +147,60 @@ const layers = [
         ))}
       </div>
     )}
+  </DepthZone>
+
+  <DepthZone
+    id="how"
+    depth={30}
+    band={2}
+    title="How I think about DevOps"
+    contours="slope"
+    sightings={[
+      { fig: 'wheel', x: 72, y: 3, size: 60, rotate: 12 },
+      { fig: 'telescope', x: 86, y: 5, size: 64, rotate: 6 },
+    ]}
+    soundings={[
+      { x: 78, y: 4, v: '27' },
+      { x: 88, y: 9, v: '31' },
+    ]}
+  >
+    <div class="intro">
+      <p>
+        I like to think about problems end to end, from the first commit to the person using the
+        product. What keeps me in this field is how quickly a change shows its effect: a pipeline
+        gets faster, a deploy stops being scary, a team ships with less friction in the same week.
+      </p>
+      <p>
+        End to end means keeping three layers in view, and making each one make sense to the people
+        working on the others.
+      </p>
+    </div>
+    <div class="profile">
+      {layers.map((l) => (
+        <div class="profile-row">
+          <span class="mono range">{l.range}</span>
+          <div>
+            <h3>{l.title}</h3>
+            <p>{l.text}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="shelf">
+      <h3 class="shelf-title">Books that shaped how I think</h3>
+      <ol class="books">
+        {BOOKS.map((b) => (
+          <li>
+            <a href={b.url} class="book-title" target="_blank" rel="noopener">
+              {b.title} <span aria-hidden="true">↗</span>
+            </a>
+            <span class="mono book-meta">
+              {b.authors} · {b.year}
+            </span>
+          </li>
+        ))}
+      </ol>
+    </div>
   </DepthZone>
 
   <DepthZone
@@ -223,8 +248,8 @@ const layers = [
   }
   h1 {
     margin-top: 18px;
-    font-size: clamp(2.3rem, 4.8vw, 3.9rem);
-    line-height: 1.06;
+    font-size: clamp(2.1rem, 4.2vw, 3.3rem);
+    line-height: 1.08;
   }
   h1 em {
     color: var(--accent);
@@ -312,6 +337,49 @@ const layers = [
     max-width: var(--measure);
     font-size: 1.08rem;
     margin-bottom: 32px;
+  }
+  .intro p + p {
+    margin-top: 0.8em;
+  }
+  .shelf {
+    margin-top: 56px;
+  }
+  .shelf-title {
+    font-size: 1.15rem;
+    margin-bottom: 14px;
+  }
+  .books {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    border-top: var(--hairline);
+    border-left: var(--hairline);
+  }
+  .books li {
+    display: grid;
+    align-content: start;
+    gap: 4px;
+    padding: 14px 16px;
+    border-right: var(--hairline);
+    border-bottom: var(--hairline);
+    background: color-mix(in srgb, var(--paper) 55%, transparent);
+  }
+  .book-title {
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    font-size: 1.08rem;
+    text-decoration: none;
+  }
+  .book-title span {
+    font-size: 0.8em;
+    color: var(--accent-ink);
+  }
+  .book-title:hover {
+    color: var(--accent-ink);
+  }
+  .book-meta {
+    font-size: 0.7rem;
+    color: var(--muted);
   }
   .profile {
     border-top: var(--hairline);
