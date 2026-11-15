@@ -37,7 +37,7 @@ const layers = [
 ---
 
 <BaseLayout>
-  <DepthZone id="surface" depth={0} band={0}>
+  <DepthZone id="surface" depth={0} band={0} class="hero-zone">
     <div class="hero">
       <div>
         <p class="mono">
@@ -55,40 +55,42 @@ const layers = [
         </p>
       </div>
       <aside class="cartouche" aria-label="At a glance">
-        <Portrait class="glance-photo" sizes="(max-width: 860px) 90vw, 400px" loading="eager" />
-        <p class="cartouche-title">At a glance</p>
-        <dl>
-          <div>
-            <dt>Experience</dt>
-            <dd>
-              <ul class="roles">
-                {timeline.map((r) => (
-                  <li>
-                    <span>{r.where}</span>
-                    <span class="mono yrs">{r.short}</span>
-                  </li>
-                ))}
-              </ul>
-            </dd>
-          </div>
-          <div>
-            <dt>Certified</dt>
-            <dd>
-              {certs.length} Microsoft certifications, including {certs[0]}
-            </dd>
-          </div>
-          <div>
-            <dt>Stack</dt>
-            <dd>Azure · AWS · Kubernetes · Terraform</dd>
-          </div>
-          <div>
-            <dt>Based</dt>
-            <dd>Brazil (UTC−3) · Remote</dd>
-          </div>
-        </dl>
-        <a class="cartouche-more mono" href={url('/about/')}>
-          Full background <span aria-hidden="true">→</span>
-        </a>
+        <div class="glance">
+          <Portrait class="glance-photo" sizes="(max-width: 860px) 90vw, 280px" loading="eager" />
+          <p class="cartouche-title">At a glance</p>
+          <dl>
+            <div>
+              <dt>Experience</dt>
+              <dd>
+                <ul class="roles">
+                  {timeline.map((r) => (
+                    <li>
+                      <span>{r.where}</span>
+                      <span class="mono yrs">{r.short}</span>
+                    </li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+            <div>
+              <dt>Certified</dt>
+              <dd>
+                {certs.length} Microsoft certifications, including {certs[0]}
+              </dd>
+            </div>
+            <div>
+              <dt>Stack</dt>
+              <dd>Azure · AWS · Kubernetes · Terraform</dd>
+            </div>
+            <div>
+              <dt>Based</dt>
+              <dd>Brazil (UTC−3) · Remote</dd>
+            </div>
+          </dl>
+          <a class="cartouche-more mono" href={url('/about/')}>
+            Full background <span aria-hidden="true">→</span>
+          </a>
+        </div>
       </aside>
     </div>
   </DepthZone>
@@ -239,9 +241,25 @@ const layers = [
 </BaseLayout>
 
 <style>
+  /* the opening section fills the first screen, below the site header */
+  @media (min-width: 861px) {
+    :global(section.zone.hero-zone) {
+      display: flex;
+      align-items: center;
+      min-height: calc(100svh - var(--header-h));
+      padding-top: clamp(12px, 3svh, 40px);
+      padding-bottom: clamp(12px, 3svh, 40px);
+    }
+    :global(.hero-zone > .zone-inner) {
+      width: 100%;
+    }
+    :global(.hero-zone) .hero {
+      padding: 0;
+    }
+  }
   .hero {
     display: grid;
-    grid-template-columns: 1.4fr 1fr;
+    grid-template-columns: 1.2fr 1fr;
     gap: 56px;
     align-items: center;
     padding: 24px 0;
@@ -273,6 +291,36 @@ const layers = [
   }
   .cartouche :global(.glance-photo) {
     margin: -6px -8px 18px;
+  }
+  /* narrow box on desktop: a smaller photo keeps the hero within one screen */
+  @media (min-width: 861px) {
+    .cartouche :global(.glance-photo) {
+      width: 60%;
+      margin: 0 0 16px;
+    }
+  }
+  /* wide box: photo on the left, facts on the right, so the hero fits one screen */
+  @container (min-width: 380px) {
+    .glance {
+      display: grid;
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      column-gap: 20px;
+      align-items: start;
+    }
+    .glance :global(.glance-photo) {
+      grid-column: 1;
+      grid-row: 1 / span 3;
+      width: auto;
+      margin: 0;
+    }
+    .glance > :not(:global(.glance-photo)) {
+      grid-column: 2;
+    }
+    .cartouche .glance dl > div {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2px;
+      padding: 5px 0;
+    }
   }
   .cartouche-title {
     font-family: var(--font-mono);

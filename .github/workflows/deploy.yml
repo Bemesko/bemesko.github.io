@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Repository variables (Settings → Secrets and variables → Actions → Variables).
-      # Leave unset to publish at https://bemesko.github.io/portfolio.
+      # Leave unset to publish at https://bemesko.github.io/.
       SITE_URL: ${{ vars.SITE_URL }}
       BASE_PATH: ${{ vars.BASE_PATH }}
     steps:

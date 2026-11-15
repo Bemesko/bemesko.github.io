@@ -100,7 +100,9 @@ const nav = [
     justify-content: space-between;
     align-items: center;
     gap: 16px;
-    padding: 22px var(--gutter);
+    /* exact height on desktop: the home hero sizes itself against it */
+    min-height: var(--header-h);
+    padding: 12px var(--gutter);
     background: var(--ink);
     color: var(--on-ink);
     font-family: var(--font-mono);

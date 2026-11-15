@@ -6,7 +6,7 @@ Personal portfolio of Bernardo Mesko. Static site built with [Astro](https://ast
 
 ```bash
 npm install
-npm run dev       # http://localhost:4321/portfolio/ (drafts visible)
+npm run dev       # http://localhost:4321/ (drafts visible)
 npm run build     # astro check + static build into dist/ (drafts excluded)
 npm run preview   # serve dist/
 ```
@@ -40,17 +40,15 @@ Every push to `main` runs `.github/workflows/deploy.yml`, which type-checks, bui
 
 One-time setup: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 
-Without extra configuration the site is published at `https://bemesko.github.io/portfolio/`.
+This repo is the GitHub user site (`bemesko.github.io`), so without extra configuration it is published at the root, `https://bemesko.github.io/`.
 
 ## Custom domain
 
 1. Add `public/CNAME` containing just the domain (e.g. `example.com`).
-2. Set the repository variables (Settings → Secrets and variables → Actions → Variables):
-   - `SITE_URL` = `https://example.com`
-   - `BASE_PATH` = `/`
+2. Set the repository variable `SITE_URL` = `https://example.com` (Settings → Secrets and variables → Actions → Variables). The base path is already `/`.
 3. DNS at your registrar:
    - Subdomain (`www.example.com`): `CNAME` → `bemesko.github.io`
    - Apex (`example.com`): `A` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153` and `AAAA` → `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153`
 4. Recommended: verify the domain under your GitHub account's **Settings → Pages** to prevent takeover.
 5. In the repo's **Settings → Pages**, set the custom domain, wait for the certificate, then tick **Enforce HTTPS**.
-6. Push (or re-run the workflow) so the build picks up the new `SITE_URL`/`BASE_PATH`.
+6. Push (or re-run the workflow) so the build picks up the new `SITE_URL`.
