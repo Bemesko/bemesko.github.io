@@ -3,9 +3,10 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
-  # daily rebuild so new blog posts show up without a push
+  # rebuild on even days at 13:30 UTC (10:30 in Brazil), an hour after new
+  # blog posts usually go out, so they show up without a push
   schedule:
-    - cron: '17 9 * * *'
+    - cron: '30 13 2-30/2 * *'
   workflow_dispatch:
 
 permissions:
