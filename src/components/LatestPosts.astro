@@ -40,10 +40,24 @@ const fmt = new Intl.DateTimeFormat('en', { day: 'numeric', month: 'short', year
     border-top: var(--hairline);
   }
   .posts li {
+    position: relative;
     display: grid;
     gap: 4px;
     padding: 14px 0;
     border-bottom: var(--hairline);
+  }
+  /* the title link stretches over the whole card, so any click opens the post */
+  .title::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .posts li:hover .title,
+  .title:focus-visible {
+    color: var(--accent-ink);
+  }
+  .posts li:hover {
+    background: color-mix(in srgb, var(--paper) 45%, transparent);
   }
   .meta {
     display: flex;
@@ -59,9 +73,6 @@ const fmt = new Intl.DateTimeFormat('en', { day: 'numeric', month: 'short', year
   }
   .title span {
     font-size: 0.8em;
-    color: var(--accent-ink);
-  }
-  .title:hover {
     color: var(--accent-ink);
   }
   .excerpt {

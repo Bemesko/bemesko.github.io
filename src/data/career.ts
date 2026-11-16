@@ -18,7 +18,7 @@ export const timeline: Role[] = [
     when: '2024 – 2025',
     short: '2024 – 25',
     where: 'Vetta (SMS Group)',
-    what: 'DevOps Engineer on Viridis, the platform that runs steel plants. OpenTelemetry observability across AKS, EKS and on-prem, and GitOps with ArgoCD.',
+    what: 'DevOps Engineer on Viridis, MES software for the steel industry. OpenTelemetry observability across AKS and on-prem clusters, and GitOps with ArgoCD.',
   },
   {
     when: '2023 – 2024',

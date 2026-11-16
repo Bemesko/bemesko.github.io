@@ -1,6 +1,6 @@
 ---
 title: Kubernetes-native observability with OpenTelemetry
-summary: Self-service metrics, logs and traces across AKS, EKS and on-prem clusters for a platform that runs steel plants, plus a move to GitOps.
+summary: Self-service metrics, logs and traces across AKS and on-prem clusters for an MES platform used in steel plants, plus a move to GitOps.
 year: 2025
 company: Vetta (SMS Group)
 role: DevOps engineer
@@ -9,17 +9,17 @@ area: observability · kubernetes
 order: 30
 star:
   situation: 'TODO: what observability looked like before (tools, gaps, who could see what).'
-  task: Give teams self-service access to metrics, logs and traces across clouds and on-prem.
+  task: Give teams self-service access to metrics, logs and traces across AKS and on-prem clusters.
   action: Built an OpenTelemetry auto-instrumentation platform with Grafana, Graylog and Jaeger, and moved Helm deploys to GitOps with ArgoCD.
   result: 'TODO: outcome (adoption, MTTR, incidents found…).'
 ---
 
-At Vetta, part of SMS Group, the Viridis platform runs steel plant operations for major steelmakers. It runs on Kubernetes in Azure, AWS and on-prem.
+At Vetta, part of SMS Group, I worked on Viridis, MES (manufacturing execution system) software used by major steelmakers. The observability work covered its Kubernetes clusters on AKS and on-prem.
 
 ## What I built
 
 - **Auto-instrumentation with OpenTelemetry**, so services emit traces and metrics without code changes.
-- **Self-service backends**: Grafana for metrics, Graylog for logs and Jaeger for traces, available to teams across AKS, EKS and on-prem clusters.
+- **Self-service backends**: Grafana for metrics, Graylog for logs and Jaeger for traces, available to teams across AKS and on-prem clusters.
 - **GitOps with ArgoCD**, replacing direct Helm deploys. The approach was taken up by SMS Group's cloud team in Germany.
 
 In parallel, Azure and Azure DevOps optimizations cut cloud costs by **15% in my first three months** and reduced pipeline support tickets.

@@ -7,6 +7,9 @@ import LatestPosts from '../components/LatestPosts.astro';
 import { CONTACT, LINKS, SITE } from '../site';
 import { BLOG_SINCE, certs, timeline } from '../data/career';
 
+// exam codes, e.g. 'DevOps Engineer Expert (AZ-400)' -> 'az-400'
+const certCodes = certs.map((c) => (c.match(/\(([^)]+)\)$/)?.[1] ?? c).toLowerCase());
+
 const education = [
   {
     when: '2021 – 2024',
@@ -42,8 +45,8 @@ const talks = [
         <div class="prose">
           <p>
             I'm a platform engineer from Brazil. Over the last five years I've worked in healthcare,
-            in software that runs steel plants, and in two consultancies, with teams in Germany,
-            India and Poland along the way.
+            in manufacturing software for the steel industry, and in two consultancies, with teams
+            in Germany, India and Poland along the way.
           </p>
           <p>
             What I like most is building the paved road: golden paths, GitOps and observability that
@@ -53,17 +56,24 @@ const talks = [
           </p>
           <p>
             I also care about the people on the road. Some of my favourite work was bringing
-            engineering practices to teams that never had them, from low-code developers to data
-            scientists.
+            engineering practices to teams that never had them.
+          </p>
+          <p>
+            I live with my wife Natalia and my two kitties, Milk and Pepper. While my wife and I
+            benefit from the homelab as our own, "free" production environment for our personal
+            software, my cats love warming themselves up on top of the servers.
           </p>
         </div>
       </div>
       <div class="side">
-        <Portrait
-          sizes="(max-width: 860px) 90vw, (max-width: 1200px) 280px, 480px"
-          loading="eager"
-          caption="fig. 1 · at the helm"
-        />
+        <Portrait sizes="(max-width: 860px) 90vw, (max-width: 1200px) 280px, 480px" loading="eager">
+          <Fragment slot="caption">
+            fig. 1 · at the{' '}
+            <a href="https://helm.sh/docs/" target="_blank" rel="noopener">
+              helm
+            </a>
+          </Fragment>
+        </Portrait>
         <YamlCard
           filename="captain.yaml"
           root="captain"
@@ -73,7 +83,7 @@ const talks = [
             { key: 'based', value: 'brazil (utc-3) · remote' },
             { key: 'clouds', value: ['azure', 'aws'] },
             { key: 'stack', value: ['kubernetes', 'terraform', 'argocd', 'opentelemetry'] },
-            { key: 'certs', value: '8x microsoft certified' },
+            { key: 'certs', value: certCodes },
             { key: 'writes', value: `captain devops' notes (${BLOG_SINCE} – ongoing)` },
           ]}
         />
@@ -124,6 +134,22 @@ const talks = [
     sightings={[{ fig: 'lighthouse', x: 82, y: 12, size: 64, rotate: -3 }]}
   >
     <ul class="talks">
+      <li>
+        <span class="mono when">{BLOG_SINCE} – ongoing</span>
+        <div>
+          <h3>
+            <a href={LINKS.blog} target="_blank" rel="noopener">
+              Captain DevOps' Notes ↗
+            </a>
+          </h3>
+          <p class="mono">Blog</p>
+          <p>Where I write about what I'm learning on the job, so it outlives the project.</p>
+          <div class="latest">
+            <p class="mono latest-label">Latest posts</p>
+            <LatestPosts limit={3} />
+          </div>
+        </div>
+      </li>
       {talks.map((t) => (
         <li>
           <span class="mono when">{t.when}</span>
@@ -134,19 +160,6 @@ const talks = [
           </div>
         </li>
       ))}
-      <li>
-        <span class="mono when">{BLOG_SINCE} – ongoing</span>
-        <div>
-          <h3>
-            <a href={LINKS.blog}>Captain DevOps' Notes ↗</a>
-          </h3>
-          <p class="mono">Blog</p>
-          <p>Where I write about what I'm learning on the job, so it outlives the project.</p>
-          <div class="latest">
-            <LatestPosts limit={3} />
-          </div>
-        </div>
-      </li>
     </ul>
   </DepthZone>
 
@@ -230,6 +243,13 @@ const talks = [
   }
   .latest {
     margin-top: 14px;
+  }
+  .latest-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
   }
   .talks h3 a {
     text-decoration: none;

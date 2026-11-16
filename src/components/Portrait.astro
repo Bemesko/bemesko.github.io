@@ -13,6 +13,7 @@ interface Props {
   focusY?: string;
   /** rendered width hint for responsive images */
   sizes: string;
+  /** plain-text caption; for markup (links) pass a `caption` slot instead */
   caption?: string;
   loading?: 'eager' | 'lazy';
   class?: string;
@@ -35,7 +36,13 @@ const {
     sizes={sizes}
     loading={loading}
   />
-  {caption && <figcaption class="mono">{caption}</figcaption>}
+  {Astro.slots.has('caption') ? (
+    <figcaption class="mono">
+      <slot name="caption" />
+    </figcaption>
+  ) : (
+    caption && <figcaption class="mono">{caption}</figcaption>
+  )}
 </figure>
 
 <style>
@@ -56,5 +63,8 @@ const {
     font-size: 0.68rem;
     letter-spacing: 0.04em;
     color: var(--muted);
+  }
+  figcaption :global(a) {
+    color: var(--accent-ink);
   }
 </style>
