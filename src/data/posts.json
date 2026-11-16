@@ -1,5 +1,13 @@
 [
   {
+    "title": "Catching up with my homelab",
+    "url": "https://captaindevops.substack.com/p/catching-up-with-my-homelab",
+    "date": "2026-11-16T12:31:04.000Z",
+    "subtitle": "",
+    "excerpt": "On the week I’m writing this there was a holiday on monday, so I would have one extra day for enjoying the weekend. Among other, less productive and blog-worthy (but…",
+    "minutes": 3
+  },
+  {
     "title": "Seniority is having opinions",
     "url": "https://captaindevops.substack.com/p/seniority-is-having-opinions",
     "date": "2026-11-14T12:37:27.000Z",
@@ -29,14 +37,6 @@
     "date": "2026-11-08T12:30:44.000Z",
     "subtitle": "",
     "excerpt": "Today’s post is more about system design. I also wanted to make a record of some of the architecture decisions I’m making with a specific project I’m helping with at…",
-    "minutes": 2
-  },
-  {
-    "title": "Consumers Need Context",
-    "url": "https://captaindevops.substack.com/p/consumers-need-context",
-    "date": "2026-11-06T12:33:32.000Z",
-    "subtitle": "More thoughts on post-AI infra as code and platform consumers.",
-    "excerpt": "This thought is a bit of a continuation for what I wrote last time. After finishing my last post I was still wondering about the subject of what has changed on my team’s…",
     "minutes": 2
   }
 ]

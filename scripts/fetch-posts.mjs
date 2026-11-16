@@ -93,7 +93,9 @@ async function fromRss2Json() {
   return data.items.map((i) =>
     enrich({
       title: i.title,
-      url: i.link,
+      // rss2json rewrites `link` into its own click-tracking redirect
+      // (rss2json.com/to/…); `guid` keeps the post's real Substack URL
+      url: /^https:\/\/captaindevops\.substack\.com\/p\//.test(i.guid ?? '') ? i.guid : i.link,
       // rss2json returns "YYYY-MM-DD HH:MM:SS" in UTC
       date: new Date(`${i.pubDate.replace(' ', 'T')}Z`).toISOString(),
       description: i.description,
