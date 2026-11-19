@@ -7,13 +7,14 @@
 //
 // Each post keeps: title, url, date, subtitle (only when the post has a real
 // one), excerpt (the opening of the text) and minutes (reading time).
-import { writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 
 const FEED = 'https://captaindevops.substack.com/feed';
 const OUT = new URL('../src/data/posts.json', import.meta.url);
 const LIMIT = 5;
 const EXCERPT_CHARS = 170;
 const WORDS_PER_MINUTE = 230;
+const RSS2JSON_RETRY_MS = Number(process.env.RSS2JSON_RETRY_MS ?? 20_000);
 
 const decode = (s) =>
   s
@@ -83,14 +84,30 @@ async function fromRss() {
   );
 }
 
-async function fromRss2Json() {
+async function rss2jsonOnce() {
   const res = await fetch(
     `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(FEED)}`,
   );
   if (!res.ok) throw new Error(`rss2json answered ${res.status}`);
   const data = await res.json();
   if (data.status !== 'ok') throw new Error(`rss2json said ${data.message ?? data.status}`);
-  return data.items.map((i) =>
+  return data.items;
+}
+
+const newest = (items) =>
+  items
+    .map((i) => i.pubDate)
+    .sort()
+    .at(-1) ?? '';
+
+async function fromRss2Json() {
+  // rss2json serves its cached copy and refreshes it in the background, so
+  // the first call can be hours old. Ask twice and keep the fresher answer.
+  const first = await rss2jsonOnce();
+  await new Promise((r) => setTimeout(r, RSS2JSON_RETRY_MS));
+  const second = await rss2jsonOnce().catch(() => first);
+  const items = newest(second) >= newest(first) ? second : first;
+  return items.map((i) =>
     enrich({
       title: i.title,
       // rss2json rewrites `link` into its own click-tracking redirect
@@ -115,6 +132,15 @@ async function main() {
         .sort((a, b) => b.date.localeCompare(a.date))
         .slice(0, LIMIT);
       if (posts.length === 0) throw new Error('no posts');
+      // never go backwards: a stale cache must not hide a post already listed
+      const current = await readFile(OUT, 'utf8')
+        .then((s) => JSON.parse(s))
+        .catch(() => []);
+      if (current[0] && posts[0].date < current[0].date) {
+        throw new Error(
+          `stale data, newest post ${posts[0].date} is older than ${current[0].date}`,
+        );
+      }
       await writeFile(OUT, `${JSON.stringify(posts, null, 2)}\n`);
       console.log(`posts.json: ${posts.length} posts via ${name}, latest "${posts[0].title}"`);
       return;

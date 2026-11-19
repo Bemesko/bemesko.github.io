@@ -1,5 +1,13 @@
 [
   {
+    "title": "Installing OSs in thumb drives requires careful consideration",
+    "url": "https://captaindevops.substack.com/p/installing-oss-in-thumb-drives-requires",
+    "date": "2026-11-18T12:31:43.000Z",
+    "subtitle": "",
+    "excerpt": "Today’s post is a revised version of an incident account I had to give recently, to someone who doesn’t have much context about what I do. The prompt was “Share about an…",
+    "minutes": 4
+  },
+  {
     "title": "Catching up with my homelab",
     "url": "https://captaindevops.substack.com/p/catching-up-with-my-homelab",
     "date": "2026-11-16T12:31:04.000Z",
@@ -29,14 +37,6 @@
     "date": "2026-11-10T12:37:47.000Z",
     "subtitle": "Albeit not deeply-informed ones.",
     "excerpt": "AdonisJS is a really interesting typescript framework. I’m not too well-versed in web development frameworks, but I thought this would be a good moment to put on the…",
-    "minutes": 2
-  },
-  {
-    "title": "Data Gateways and AI Agent trickery",
-    "url": "https://captaindevops.substack.com/p/data-gateways-and-ai-agent-trickery",
-    "date": "2026-11-08T12:30:44.000Z",
-    "subtitle": "",
-    "excerpt": "Today’s post is more about system design. I also wanted to make a record of some of the architecture decisions I’m making with a specific project I’m helping with at…",
     "minutes": 2
   }
 ]
